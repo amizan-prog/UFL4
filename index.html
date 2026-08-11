@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <title>UFL Inden Monitor</title>
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVUZMIEluZGVuIE1vbml0b3IiLCJzaG9ydF9uYW1lIjoiVUZMIE1vbml0b3IiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzExMTgyNyIsInRoZW1lX2NvbG9yIjoiIzExMTgyNyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnJTIweG1sbnMlM0QlMjJodHRwJTNBJTJGJTJGd3d3LnczLm9yZyUyRjIwMDAlMkZzdmclMjIlMjB2aWV3Qm94JTNEJTIyMCUyMDAlMjAxOTIlMjAxOTIlMjIlM0UlM0N0ZXh0JTIweCUzRCUyMjk2JTIyJTIweSUzRCUyMjEyMCUyMiUyMGZvbnQtc2l6ZT0lMjI4MCUyMiUyMHRleHQtYW5jaG9yJTNEJTIybWlkZGxlJTIyJTIwZmlsbCUzRCUyIndoaXRlJTIyJTNFVSUzQyUyRnRleHQlM0UlM0MlMkZzdmclM0UiLCJzaXplcyI6IjE5MnAxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVUZMIEluZGVuIE1vbml0b3IiLCJzaG9ydF9uYW1lIjoiVUZMIE1vbml0b3IiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzExMTgyNyIsInRoZW1lX2NvbG9yIjoiIzExMTgyNyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnJTIweG1sbnMlM0QlMjJodHRwJTNBJTJGJTJGd3d3LnczLm9yZyUyRjIwMDAlMkZzdmclMjIlMjB2aWV3Qm94JTNEJTIyMCUyMDAlMjAxOTIlMjAxOTIlMjIlM0UlM0N0ZXh0JTIweCUzRCUyMjk2JTIyJTIweSUzRCUyMjEyMCUyMiUyMGZvbnQtc2l6ZT0lMjI4MCUyMiUyMHRleHQtYW5jaG9yJTNEJTIybWlkZGxlJTIyJTIwZmlsbCUzRCUyMndoaXRlJTIyJTNFVSUzQyUyRnRleHQlM0UlM0MlMkZzdmclM0UiLCJzaXplcyI6IjE5MnAxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0=">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 *{box-sizing:border-box}
@@ -45,11 +45,11 @@ button:active{transform:translateY(0)}
 .toast-wrap{position:fixed;top:82px;right:24px;z-index:100;display:flex;flex-direction:column;gap:12px;width:min(390px,calc(100vw - 32px));pointer-events:none}
 .toast{pointer-events:auto;position:relative;overflow:hidden;border:2px solid #facc15;border-left-width:6px;box-shadow:0 12px 30px #0003;animation:toastIn .35s ease both}
 .sound-active{animation:soundPulse 1s ease-in-out infinite}
-@keyframes blinkStatus{0%,100%{opacity:1;transform:scale(1)}50:{opacity:.28;transform:scale(.96);box-shadow:0 0 0 5px #38bdf855}}
-@keyframes blinkCart{0%,100%{opacity:1;transform:scale(1)}50:{opacity:.3;transform:scale(.86);filter:brightness(1.7)}}
-@keyframes neonBreath{0%,100%{border-color:#22c55e;box-shadow:0 0 8px #22c55e,0 0 18px #22c55e,0 0 32px #16a34a,0 9px 0 #166534,0 15px 24px #22c55e30}25:{border-color:#4ade80;box-shadow:0 0 14px #4ade80,0 0 26px #4ade80,0 0 42px #22c55e,0 9px 0 #166534,0 15px 24px #22c55e40}50:{border-color:#86efac;box-shadow:0 0 22px #86efac,0 0 38px #4ade80,0 0 58px #22c55e,0 9px 0 #166534,0 15px 24px #22c55e60}75:{border-color:#4ade80;box-shadow:0 0 14px #4ade80,0 0 26px #4ade80,0 0 42px #22c55e,0 15px 24px #22c55e40}}
-@keyframes toastIn{from{transform:translateX(35px);opacity:0}to:{transform:translateX(0);opacity:1}}
-@keyframes soundPulse{50:{box-shadow:0 0 0 5px #22d3ee55}}
+@keyframes blinkStatus{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.28;transform:scale(.96);box-shadow:0 0 0 5px #38bdf855}}
+@keyframes blinkCart{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.86);filter:brightness(1.7)}}
+@keyframes neonBreath{0%,100%{border-color:#22c55e;box-shadow:0 0 8px #22c55e,0 0 18px #22c55e,0 0 32px #16a34a,0 9px 0 #166534,0 15px 24px #22c55e30}25%{border-color:#4ade80;box-shadow:0 0 14px #4ade80,0 0 26px #4ade80,0 0 42px #22c55e,0 9px 0 #166534,0 15px 24px #22c55e40}50%{border-color:#86efac;box-shadow:0 0 22px #86efac,0 0 38px #4ade80,0 0 58px #22c55e,0 9px 0 #166534,0 15px 24px #22c55e60}75%{border-color:#4ade80;box-shadow:0 0 14px #4ade80,0 0 26px #4ade80,0 0 42px #22c55e,0 15px 24px #22c55e40}}
+@keyframes toastIn{from{transform:translateX(35px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes soundPulse{50%{box-shadow:0 0 0 5px #22d3ee55}}
 @media(max-width:1279px){.unit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.unit-header{display:none}.unit-grid:not(.unit-header)>:first-child{grid-column:1/-1}}
 @media(max-width:640px){.outer-frame{border-width:5px}.unit-grid{gap:10px;padding:10px!important}.unit-data{padding:10px}.ready-card:after{right:12px;font-size:.55rem}.toast-wrap{top:70px;right:16px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
@@ -95,7 +95,7 @@ function preferredVoice(){
     if(msVoice) return msVoice;
     let patternVoice=allVoices.find(v=>{
       let combined=(v.lang+" "+v.name).toLowerCase();
-      return target.pattern.test(combined) || 
+      return target.pattern.test(combined) ||
              v.lang.toLowerCase().startsWith("ms") ||
              /melayu|malay|bahasa melayu/.test(combined);
     });
@@ -258,7 +258,7 @@ if("serviceWorker" in navigator){
     }
   }).catch(e=>console.warn("Service Worker registration failed:", e));
 }
-render();fetchData();setInterval(fetchData,6000);
+render();fetchData();setInterval(fetchData,5000);
 </script>
 </body>
 </html>
