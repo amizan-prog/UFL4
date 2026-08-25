@@ -582,7 +582,7 @@
     let notificationsEnabled = localStorage.getItem("statufl_notifications") === "on";
     let soundNotifications = localStorage.getItem("statufl_sound_notifications") !== "off";
     let columnFHeader = "";
-    let lastAnnouncementTime = 0; // Menjejaki masa pengumuman berkala terakhir
+    let lastAnnouncementTime = 0; // Menjejaki masa pengumuman 1 jam terakhir
 
     const tr = v => String(v ?? "").toLowerCase().replace(/\s+/g, "");
     const readyStatus = v => tr(v) === "indensediadiambil";
@@ -771,7 +771,7 @@
     }
 
     /* -------------------------------------------------------------
-       TTS QUEUE ENGINE
+       TTS CLOUD-CONSISTENT ENGINE (Google Translate TTS API)
     ------------------------------------------------------------- */
     let ttsAudioPlayer = null;
     let activeCardElement = null;
@@ -808,9 +808,6 @@
         ttsAudioPlayer.currentTime = 0;
         ttsAudioPlayer = null;
       }
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
       if (activeCardElement) {
         activeCardElement.classList.remove("speaking");
         activeCardElement = null;
@@ -844,45 +841,34 @@
           activeCardElement = null;
         }
         isSpeaking = false;
-        setTimeout(processSpeechQueue, 300);
+        setTimeout(processSpeechQueue, 350);
       };
 
-      const startAudioSpeech = () => {
-        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${ttsLangCode}&client=tw-ob&q=${encodeURIComponent(speechSentence)}`;
-        ttsAudioPlayer = new Audio(audioUrl);
+      // Menggunakan Cloud TTS (Google Translate API endpoint) untuk suara yang konsisten di semua peranti
+      const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${ttsLangCode}&client=tw-ob&q=${encodeURIComponent(speechSentence)}`;
+      ttsAudioPlayer = new Audio(audioUrl);
 
-        ttsAudioPlayer.onended = onFinish;
-        ttsAudioPlayer.onerror = () => {
-          if ('speechSynthesis' in window) {
-            const utterance = new SpeechSynthesisUtterance(speechSentence);
-            utterance.lang = isEnglish ? "en-US" : "ms-MY";
-            utterance.rate = 0.95;
-            utterance.pitch = 1.0;
-
-            const voices = window.speechSynthesis.getVoices();
-            const selectedVoice = isEnglish
-              ? voices.find(v => v.lang.startsWith("en"))
-              : voices.find(v => v.lang.startsWith("ms") || v.lang.startsWith("id"));
-            
-            if (selectedVoice) utterance.voice = selectedVoice;
-
-            utterance.onend = onFinish;
-            utterance.onerror = onFinish;
-            window.speechSynthesis.speak(utterance);
-          } else {
-            onFinish();
-          }
-        };
-
-        ttsAudioPlayer.play().catch(() => {
-          ttsAudioPlayer.onerror();
-        });
+      ttsAudioPlayer.onended = onFinish;
+      ttsAudioPlayer.onerror = () => {
+        // Fallback ke sistem pelayar jika rangkaian gagal
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(speechSentence);
+          utterance.lang = isEnglish ? "en-US" : "ms-MY";
+          utterance.rate = 0.95;
+          utterance.onend = onFinish;
+          utterance.onerror = onFinish;
+          window.speechSynthesis.speak(utterance);
+        } else {
+          onFinish();
+        }
       };
 
       if (isNotification) {
-        setTimeout(startAudioSpeech, 450);
+        setTimeout(() => {
+          ttsAudioPlayer.play().catch(onFinish);
+        }, 450);
       } else {
-        startAudioSpeech();
+        ttsAudioPlayer.play().catch(onFinish);
       }
     }
 
@@ -910,9 +896,9 @@
       const now = Date.now();
       const ONE_HOUR = 3600000; // 1 jam dalam milisaat
       
-      // Semak sama ada sudah 1 jam berlalu sejak pengumuman/kemaskini terakhir
+      // Semak sama ada sudah 1 jam berlalu sejak kemaskini/pengumuman terakhir
       if (now - lastAnnouncementTime >= ONE_HOUR) {
-        // Cari unit yang 'Sedia Diambil' DAN 'Perlu Troli: Ya'
+        // Cari unit yang berstatus 'Sedia Diambil' DAN 'Perlu Troli: Ya'
         const readyNeedingTrolley = data.filter(u => u.ready && needs(u));
         
         if (readyNeedingTrolley.length > 0) {
@@ -923,7 +909,7 @@
             }
           });
           processSpeechQueue();
-          lastAnnouncementTime = now; // Kemas kini masa pengumuman berkala
+          lastAnnouncementTime = now; // Tetapkan semula masa
         }
       }
     }
@@ -1083,8 +1069,7 @@
       const diValue = directIssueDisplayValue(u.priority);
       const card = document.createElement("div");
       
-      // Tetapkan semula pemasa pengumuman berkala apabila ada kemas kini baharu
-      lastAnnouncementTime = Date.now();
+      lastAnnouncementTime = Date.now(); // Tetapkan semula masa asas 1 jam apabila ada kemas kini
       
       card.className = "notification-card pointer-events-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 shadow-xl overflow-hidden backdrop-blur-md animate-toast";
       card.innerHTML = `
@@ -1337,7 +1322,7 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       apply();
-      lastAnnouncementTime = Date.now(); // Tetapkan masa permulaan pengumuman berkala
+      lastAnnouncementTime = Date.now();
       const isDark = document.documentElement.classList.contains("dark");
       DOM.themeIcon.className = isDark ? "fa-solid fa-sun text-amber-400" : "fa-solid fa-moon";
       
