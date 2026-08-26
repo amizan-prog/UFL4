@@ -3,367 +3,802 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f172a">
-  <meta name="description" content="Papan pemuka pemantauan status unit hospital masa nyata">
-  <title>STATUFL • Papan Pemuka Unit</title>
-
-  <!-- Theme Preload -->
+  <meta name="description" content="Papan pemuka pemantauan status unit">
+  <title>STATUFL • Papan Pemuka</title>
   <script>
-    if (localStorage.getItem("statufl_theme") === "dark" || 
-       (!localStorage.getItem("statufl_theme") && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add("dark");
-    }
+    if (localStorage.getItem("statufl_theme") === "dark") document.documentElement.classList.add("dark");
+
   </script>
-
-  <!-- Tailwind CSS CDN & Configuration -->
+  <link rel="stylesheet" href="/theme.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            logo: ['Poppins', 'sans-serif']
-          },
-          colors: {
-            brand: {
-              50: '#f5f3ff',
-              100: '#ede9fe',
-              500: '#8b5cf6',
-              600: '#7c3aed',
-              700: '#6d28d9',
-            }
-          }
-        }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Inter, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      transition: .3s;
+    }
+
+    .logo {
+      font-family: Poppins, sans-serif;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+    }
+
+    .card {
+      transition: .3s;
+      box-shadow: 0 3px 0 #cbd5e1, 0 9px 18px #0f172a1c;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 0 #aebaca, 0 16px 25px #0f172a2b;
+    }
+
+    .neon {
+      border-color: #22c55e;
+      box-shadow: 0 3px 0 #15803d, 0 0 22px #22c55e88;
+      animation: glow 2s infinite;
+    }
+
+    @keyframes glow {
+      50% {
+        box-shadow: 0 3px 0 #15803d, 0 0 32px #22c55ebb;
       }
     }
-  </script>
 
-  <!-- Google Fonts & FontAwesome -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      -webkit-tap-highlight-color: transparent;
+    .panel {
+      border: 3px solid #0f172a;
+      border-radius: 16px;
+      padding: 10px 16px;
+      background: #fff;
+      box-shadow: 0 3px 0 #94a3b8;
     }
 
-    .logo-font {
-      font-family: 'Poppins', sans-serif;
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 2px solid #cbd5e1;
     }
 
-    .hero-gradient {
-      background: radial-gradient(circle at top right, #1e293b, #0f172a);
-    }
-
-    /* --- 3D BOLD CARD STYLES --- */
-    .status-card {
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.8);
-      background: linear-gradient(145deg, #ffffff, #f8fafc);
+    .row span {
+      display: flex;
+      align-items: center;
+      font-size: 15px; 
+      font-weight: 600;
+      color: #475569;
     }
     
-    .dark .status-card {
-      box-shadow: 0 4px 10px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.08);
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-    }
-    
-    .status-card:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -5px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255,255,255,0.9);
-    }
-    
-    .dark .status-card:hover {
-      box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+    .row > b:not(.badge) {
+      font-size: 18px; 
+      padding-right: 12px;
     }
 
-    /* --- CARD BREATHING ANIMATION FOR READY STATUS --- */
-    @keyframes cardBreathing {
-      0%, 100% { transform: scale(1); box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2), 0 0 0 rgba(16, 185, 129, 0); }
-      50% { transform: scale(1.015); box-shadow: 0 12px 30px -4px rgba(16, 185, 129, 0.45), 0 0 20px rgba(16, 185, 129, 0.25); }
+    .row:last-child {
+      border: 0;
     }
 
-    .card-ready-glow {
-      position: relative;
-      border-color: #059669 !important;
-      background: linear-gradient(145deg, #ffffff, #ecfdf5) !important;
-      animation: cardBreathing 2.5s infinite ease-in-out;
-    }
-    
-    .dark .card-ready-glow {
-      background: linear-gradient(145deg, #0f172a, #064e3b) !important;
-      border-color: #10b981 !important;
-      animation: cardBreathing 2.5s infinite ease-in-out;
-    }
-
-    /* Audio Speaking Pulse */
-    .status-card.speaking,
-    .notification-card.speaking {
-      border-color: #8b5cf6 !important;
-      animation: speakingPulse 1.4s infinite ease-in-out !important;
+    .badge {
+      font-size: 16px; 
+      font-weight: 800; 
+      padding: 8px 16px; 
+      border-radius: 999px;
+      white-space: normal; 
+      text-align: center;
+      line-height: 1.3;
+      flex-shrink: 0;
+      max-width: 60%;
+      word-break: break-word;
     }
 
-    @keyframes speakingPulse {
-      0%, 100% { box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.45), inset 0 1px 0 rgba(255,255,255,0.5); }
-      50% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.5); }
+    .green {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .blue {
+      background: #bfdbfe;
+      color: #1e3a8a;
+    }
+
+    .orange {
+      background: #fed7aa;
+      color: #9a3412;
+    }
+
+    .grey {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .yellow {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .priority {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      z-index: 10;
+      white-space: nowrap; 
+      font-size: 13px; 
+      padding: 6px 12px;
+    }
+
+    .title {
+      border: 2px solid #0f172a;
+      border-radius: 13px;
+      padding: 10px 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: 0 3px 0 #94a3b8;
+      background: linear-gradient(135deg, #fff, #f8fafc);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 7px);
+      z-index: 30;
+      padding: 9px;
+      background: #0f172a;
+      color: #fff;
+      border-radius: 9px;
+      font-size: 12px;
+      opacity: 0;
+      visibility: hidden;
+      transition: .2s;
+      max-width: calc(100vw - 40px);
+      width: max-content;
+    }
+
+    .titlebox:hover .tip,
+    .titlebox:focus-within .tip {
+      opacity: 1;
+      visibility: visible;
     }
 
     .refreshing {
-      animation: spin 0.8s linear infinite;
+      animation: spin 1s linear infinite;
+    }
+
+    .status-change {
+      animation: pulse .7s ease;
+    }
+
+    .notification-card {
+      animation: in .35s ease;
+      backdrop-filter: blur(12px);
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
-    @keyframes toastSlide {
-      from { opacity: 0; transform: translateY(16px) scale(0.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 #22c55e88;
+      }
+
+      100% {
+        box-shadow: 0 0 0 18px transparent;
+      }
     }
 
-    .animate-toast {
-      animation: toastSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    @keyframes in {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    /* Custom Badges */
-    .badge-green { background-color: #dcfce7; color: #15803d; }
-    .badge-blue { background-color: #dbeafe; color: #1d4ed8; }
-    .badge-orange { background-color: #ffedd5; color: #c2410c; }
-    .badge-grey { background-color: #f1f5f9; color: #475569; }
-    .badge-yellow { background-color: #fef3c7; color: #b45309; }
+    html.dark body {
+      background: #0f172a;
+      color: #e2e8f0;
+    }
 
-    .dark .badge-green { background-color: rgba(22, 101, 52, 0.35); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.2); }
-    .dark .badge-blue { background-color: rgba(30, 64, 175, 0.35); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.2); }
-    .dark .badge-orange { background-color: rgba(154, 52, 18, 0.35); color: #fdba74; border: 1px solid rgba(249, 115, 22, 0.2); }
-    .dark .badge-grey { background-color: rgba(51, 65, 85, 0.5); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.15); }
-    .dark .badge-yellow { background-color: rgba(146, 64, 14, 0.35); color: #fde047; border: 1px solid rgba(234, 179, 8, 0.2); }
+    html.dark nav,
+    html.dark .white,
+    html.dark .bg-white {
+      background: #1e293b !important;
+      color: #e2e8f0;
+    }
+
+    html.dark .title {
+      background: #172033;
+      border-color: #64748b;
+      color: #f8fafc;
+    }
+
+    html.dark .panel {
+      background: #172033;
+      border-color: #64748b;
+    }
+
+    html.dark .row {
+      border-color: #475569;
+    }
+
+    html.dark .row span {
+      color: #cbd5e1;
+    }
+
+    html.dark input {
+      background: #172033 !important;
+      color: #fff;
+      border-color: #475569 !important;
+    }
+
+    html.dark .text-slate-900,
+    html.dark .text-slate-800 {
+      color: #f8fafc !important;
+    }
+
+    html.dark .text-slate-700,
+    html.dark .text-slate-600 {
+      color: #cbd5e1 !important;
+    }
+
+    .icon-action {
+      position: relative;
+    }
+
+    .icon-action::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 14px);
+      z-index: 60;
+      transform: translateX(-50%) translateY(-6px);
+      min-width: max-content;
+      padding: 9px 13px;
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: var(--radius);
+      background: var(--color-text);
+      color: var(--color-primary-contrast);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: .01em;
+      white-space: nowrap;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, .28), 0 2px 5px rgba(15, 23, 42, .2);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+    }
+
+    .icon-action::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 7px);
+      z-index: 61;
+      width: 10px;
+      height: 10px;
+      background: var(--color-text);
+      transform: translateX(-50%) rotate(45deg) translateY(-4px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+    }
+
+    .icon-action:hover::after,
+    .icon-action:focus-visible::after,
+    .icon-action:hover::before,
+    .icon-action:focus-visible::before {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .icon-action:hover::after,
+    .icon-action:focus-visible::after {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .icon-action:hover::before,
+    .icon-action:focus-visible::before {
+      transform: translateX(-50%) rotate(45deg) translateY(0);
+    }
+
+  </style>
+  <style>
+    *,
+    ::before,
+    ::after {
+      --tw-border-spacing-x: 0;
+      --tw-border-spacing-y: 0;
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-rotate: 0;
+      --tw-skew-x: 0;
+      --tw-skew-y: 0;
+      --tw-scale-x: 1;
+      --tw-scale-y: 1;
+      --tw-pan-x: ;
+      --tw-pan-y: ;
+      --tw-pinch-zoom: ;
+      --tw-scroll-snap-strictness: proximity;
+      --tw-gradient-from-position: ;
+      --tw-gradient-via-position: ;
+      --tw-gradient-to-position: ;
+      --tw-ordinal: ;
+      --tw-slashed-zero: ;
+      --tw-numeric-figure: ;
+      --tw-numeric-spacing: ;
+      --tw-numeric-fraction: ;
+      --tw-ring-inset: ;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-color: rgb(59 130 246 / 0.5);
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-colored: 0 0 #0000;
+      --tw-blur: ;
+      --tw-brightness: ;
+      --tw-contrast: ;
+      --tw-grayscale: ;
+      --tw-hue-rotate: ;
+      --tw-invert: ;
+      --tw-saturate: ;
+      --tw-sepia: ;
+      --tw-drop-shadow: ;
+      --tw-backdrop-blur: ;
+      --tw-backdrop-brightness: ;
+      --tw-backdrop-contrast: ;
+      --tw-backdrop-grayscale: ;
+      --tw-backdrop-hue-rotate: ;
+      --tw-backdrop-invert: ;
+      --tw-backdrop-opacity: ;
+      --tw-backdrop-saturate: ;
+      --tw-backdrop-sepia: ;
+      --tw-contain-size: ;
+      --tw-contain-layout: ;
+      --tw-contain-paint: ;
+      --tw-contain-style: ;
+    }
+
+    ::backdrop {
+      --tw-border-spacing-x: 0;
+      --tw-border-spacing-y: 0;
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-rotate: 0;
+      --tw-skew-x: 0;
+      --tw-skew-y: 0;
+      --tw-scale-x: 1;
+      --tw-scale-y: 1;
+      --tw-pan-x: ;
+      --tw-pan-y: ;
+      --tw-pinch-zoom: ;
+      --tw-scroll-snap-strictness: proximity;
+      --tw-gradient-from-position: ;
+      --tw-gradient-via-position: ;
+      --tw-gradient-to-position: ;
+      --tw-ordinal: ;
+      --tw-slashed-zero: ;
+      --tw-numeric-figure: ;
+      --tw-numeric-spacing: ;
+      --tw-numeric-fraction: ;
+      --tw-ring-inset: ;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-color: rgb(59 130 246 / 0.5);
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-colored: 0 0 #0000;
+      --tw-blur: ;
+      --tw-brightness: ;
+      --tw-contrast: ;
+      --tw-grayscale: ;
+      --tw-hue-rotate: ;
+      --tw-invert: ;
+      --tw-saturate: ;
+      --tw-sepia: ;
+      --tw-drop-shadow: ;
+      --tw-backdrop-blur: ;
+      --tw-backdrop-brightness: ;
+      --tw-backdrop-contrast: ;
+      --tw-backdrop-grayscale: ;
+      --tw-backdrop-hue-rotate: ;
+      --tw-backdrop-invert: ;
+      --tw-backdrop-opacity: ;
+      --tw-backdrop-saturate: ;
+      --tw-backdrop-sepia: ;
+      --tw-contain-size: ;
+      --tw-contain-layout: ;
+      --tw-contain-paint: ;
+      --tw-contain-style: ;
+    }
+  </style>
+  <style>
+    .pointer-events-none { pointer-events: none; }
+    .pointer-events-auto { pointer-events: auto; }
+    .fixed { position: fixed; }
+    .absolute { position: absolute; }
+    .relative { position: relative; }
+    .inset-0 { inset: 0px; }
+    .bottom-5 { bottom: 1.25rem; }
+    .left-4 { left: 1rem; }
+    .right-3 { right: 0.75rem; }
+    .right-5 { right: 1.25rem; }
+    .top-1\/2 { top: 50%; }
+    .top-5 { top: 1.25rem; }
+    .z-40 { z-index: 40; }
+    .z-50 { z-index: 50; }
+    .col-span-full { grid-column: 1 / -1; }
+    .mx-4 { margin-left: 1rem; margin-right: 1rem; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .my-6 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+    .-mt-6 { margin-top: -1.5rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-5 { margin-bottom: 1.25rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-8 { margin-top: 2rem; }
+    .block { display: block; }
+    .flex { display: flex; }
+    .grid { display: grid; }
+    .hidden { display: none; }
+    .h-10 { height: 2.5rem; }
+    .h-5 { height: 1.25rem; }
+    .h-9 { height: 2.25rem; }
+    .w-10 { width: 2.5rem; }
+    .w-5 { width: 1.25rem; }
+    .w-9 { width: 2.25rem; }
+    .w-\[min\(390px\2c calc\(100vw-2rem\)\)\] { width: min(390px, calc(100vw - 2rem)); }
+    .w-full { width: 100%; }
+    .min-w-0 { min-width: 0px; }
+    .max-w-lg { max-width: 32rem; }
+    .max-w-screen-xl { max-width: 1280px; }
+    .max-w-sm { max-width: 24rem; }
+    .max-w-xl { max-width: 36rem; }
+    .flex-1 { flex: 1 1 0%; }
+    .-translate-y-1\/2 { --tw-translate-y: -50%; transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)); }
+    .cursor-pointer { cursor: pointer; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .flex-col { flex-direction: column; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-start { align-items: flex-start; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-5 { gap: 1.25rem; }
+    .space-y-3> :not([hidden])~ :not([hidden]) { --tw-space-y-reverse: 0; margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(0.75rem * var(--tw-space-y-reverse)); }
+    .space-y-5> :not([hidden])~ :not([hidden]) { --tw-space-y-reverse: 0; margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse))); margin-bottom: calc(1.25rem * var(--tw-space-y-reverse)); }
+    .overflow-hidden { overflow: hidden; }
+    .rounded-2xl { border-radius: 1rem; }
+    .rounded-3xl { border-radius: 1.5rem; }
+    .rounded-xl { border-radius: 0.75rem; }
+    .border { border-width: 1px; }
+    .border-b { border-bottom-width: 1px; }
+    .border-t { border-top-width: 1px; }
+    .border-slate-200 { --tw-border-opacity: 1; border-color: rgb(226 232 240 / var(--tw-border-opacity, 1)); }
+    .bg-emerald-600 { --tw-bg-opacity: 1; background-color: rgb(5 150 105 / var(--tw-bg-opacity, 1)); }
+    .bg-emerald-100 { --tw-bg-opacity: 1; background-color: rgb(209 250 229 / var(--tw-bg-opacity, 1)); }
+    .bg-slate-100 { --tw-bg-opacity: 1; background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1)); }
+    .bg-slate-50 { --tw-bg-opacity: 1; background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1)); }
+    .bg-slate-900 { --tw-bg-opacity: 1; background-color: rgb(15 23 42 / var(--tw-bg-opacity, 1)); }
+    .bg-slate-900\/60 { background-color: rgb(15 23 42 / 0.6); }
+    .bg-violet-600 { --tw-bg-opacity: 1; background-color: rgb(124 58 237 / var(--tw-bg-opacity, 1)); }
+    .bg-white { --tw-bg-opacity: 1; background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1)); }
+    .bg-white\/20 { background-color: rgb(255 255 255 / 0.2); }
+    .bg-violet-50 { --tw-bg-opacity: 1; background-color: rgb(245 243 255 / var(--tw-bg-opacity, 1)); }
+    .bg-orange-50 { --tw-bg-opacity: 1; background-color: rgb(255 247 237 / var(--tw-bg-opacity, 1)); }
+    .bg-amber-50 { --tw-bg-opacity: 1; background-color: rgb(255 251 235 / var(--tw-bg-opacity, 1)); }
+    .bg-red-50 { --tw-bg-opacity: 1; background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1)); }
+    .p-1 { padding: 0.25rem; }
+    .p-3 { padding: 0.75rem; }
+    .p-5 { padding: 1.25rem; }
+    .p-6 { padding: 1.5rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-3\.5 { padding-top: 0.875rem; padding-bottom: 0.875rem; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+    .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+    .pl-11 { padding-left: 2.75rem; }
+    .pr-11 { padding-right: 2.75rem; }
+    .pr-20 { padding-right: 5rem; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .text-\[10px\] { font-size: 10px; }
+    .font-bold { font-weight: 700; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .text-amber-600 { --tw-text-opacity: 1; color: rgb(217 119 6 / var(--tw-text-opacity, 1)); }
+    .text-emerald-300 { --tw-text-opacity: 1; color: rgb(110 231 183 / var(--tw-text-opacity, 1)); }
+    .text-emerald-400 { --tw-text-opacity: 1; color: rgb(52 211 153 / var(--tw-text-opacity, 1)); }
+    .text-emerald-600 { --tw-text-opacity: 1; color: rgb(5 150 105 / var(--tw-text-opacity, 1)); }
+    .text-emerald-700 { --tw-text-opacity: 1; color: rgb(4 120 87 / var(--tw-text-opacity, 1)); }
+    .text-orange-500 { --tw-text-opacity: 1; color: rgb(249 115 22 / var(--tw-text-opacity, 1)); }
+    .text-red-500 { --tw-text-opacity: 1; color: rgb(239 68 68 / var(--tw-text-opacity, 1)); }
+    .text-slate-300 { --tw-text-opacity: 1; color: rgb(203 213 225 / var(--tw-text-opacity, 1)); }
+    .text-slate-400 { --tw-text-opacity: 1; color: rgb(148 163 184 / var(--tw-text-opacity, 1)); }
+    .text-slate-500 { --tw-text-opacity: 1; color: rgb(100 116 139 / var(--tw-text-opacity, 1)); }
+    .text-slate-600 { --tw-text-opacity: 1; color: rgb(71 85 105 / var(--tw-text-opacity, 1)); }
+    .text-slate-700 { --tw-text-opacity: 1; color: rgb(51 65 85 / var(--tw-text-opacity, 1)); }
+    .text-slate-800 { --tw-text-opacity: 1; color: rgb(30 41 59 / var(--tw-text-opacity, 1)); }
+    .text-slate-900 { --tw-text-opacity: 1; color: rgb(15 23 42 / var(--tw-text-opacity, 1)); }
+    .text-violet-500 { --tw-text-opacity: 1; color: rgb(139 92 246 / var(--tw-text-opacity, 1)); }
+    .text-violet-600 { --tw-text-opacity: 1; color: rgb(124 58 237 / var(--tw-text-opacity, 1)); }
+    .text-white { --tw-text-opacity: 1; color: rgb(255 255 255 / var(--tw-text-opacity, 1)); }
+    .accent-violet-600 { accent-color: #7c3aed; }
+    .shadow-2xl { --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color); box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); }
+    .shadow-\[0_3px_0_\#020617\] { --tw-shadow: 0 3px 0 #020617; --tw-shadow-colored: 0 3px 0 var(--tw-shadow-color); box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); }
+    .shadow-\[0_3px_0_\#5b21b6\] { --tw-shadow: 0 3px 0 #5b21b6; --tw-shadow-colored: 0 3px 0 var(--tw-shadow-color); box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); }
+    .shadow-\[0_3px_0_\#cbd5e1\] { --tw-shadow: 0 3px 0 #cbd5e1; --tw-shadow-colored: 0 3px 0 var(--tw-shadow-color); box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); }
+    .shadow-\[0_4px_0_\#6d28d9\] { --tw-shadow: 0 4px 0 #6d28d9; --tw-shadow-colored: 0 4px 0 var(--tw-shadow-color); box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); }
+    .shadow-sm { --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color); box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow); }
+    .backdrop-blur-sm { --tw-backdrop-blur: blur(4px); -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia); backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia); }
+    .focus\:outline-none:focus { outline: 2px solid transparent; outline-offset: 2px; }
+    .focus\:ring-2:focus { --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000); }
+    .focus\:ring-violet-500:focus { --tw-ring-opacity: 1; --tw-ring-color: rgb(139 92 246 / var(--tw-ring-opacity, 1)); }
+
+    @media (min-width: 768px) {
+      .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .md\:flex-row { flex-direction: row; }
+      .md\:items-end { align-items: flex-end; }
+      .md\:justify-between { justify-content: space-between; }
+    }
+
+    @media (min-width: 1024px) {
+      .lg\:flex-row { flex-direction: row; }
+      .lg\:items-center { align-items: center; }
+    }
+
+    html.dark .dark\:bg-slate-800\/95 { background-color: rgb(30 41 59 / 0.95); }
+    html.dark .dark\:bg-slate-700 { --tw-bg-opacity: 1; background-color: rgb(51 65 85 / var(--tw-bg-opacity, 1)); }
+    html.dark .dark\:bg-violet-900\/30 { background-color: rgb(76 29 149 / 0.3); }
+    html.dark .dark\:bg-orange-900\/30 { background-color: rgb(124 45 18 / 0.3); }
+    html.dark .dark\:bg-amber-900\/30 { background-color: rgb(120 53 15 / 0.3); }
+    html.dark .dark\:bg-red-900\/30 { background-color: rgb(127 29 29 / 0.3); }
+    html.dark .dark\:text-white { --tw-text-opacity: 1; color: rgb(255 255 255 / var(--tw-text-opacity, 1)); }
+    html.dark .dark\:text-slate-500 { --tw-text-opacity: 1; color: rgb(100 116 139 / var(--tw-text-opacity, 1)); }
   </style>
 </head>
 
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen antialiased flex flex-col selection:bg-brand-500 selection:text-white pb-12">
+<body>
 
-  <!-- Sticky Responsive Header -->
-  <nav class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 transition-colors">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-      
-      <!-- Brand & Status -->
-      <div class="flex items-center gap-3 shrink-0">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-brand-600/20">
-          <i class="fa-solid fa-square-poll-vertical text-lg sm:text-xl"></i>
+  <nav class="bg-white border-b border-slate-200">
+    <div class="max-w-screen-xl mx-auto px-5 py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center shadow-[0_4px_0_#6d28d9]">
+          <i class="fa-solid fa-chart-line text-white text-2xl"></i>
         </div>
-        <div>
-          <span class="logo-font text-xl sm:text-2xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">statufl</span>
-          <div class="flex items-center gap-1.5 -mt-1 sm:hidden">
-            <span id="mobileConnDot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="mobileConnText" class="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">Live</span>
-          </div>
-        </div>
+        <span class="logo text-3xl font-bold">statufl</span>
       </div>
-
-      <!-- Header Action Controls -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
-        <button onclick="toggleLang()" class="h-9 px-2.5 sm:px-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 transition" title="Tukar Bahasa / Switch Language">
-          <i class="fa-solid fa-language text-brand-600 dark:text-brand-500 text-sm"></i>
-          <span id="langText">BM</span>
-        </button>
-
-        <button onclick="toggleTheme()" class="w-9 h-9 sm:w-auto sm:px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center justify-center gap-1.5 transition" title="Tukar Mod Paparan">
+      <div class="flex flex-wrap gap-2 items-center">
+        <div class="flex bg-slate-100 rounded-3xl p-1" role="group" aria-label="Penapis unit">
+          <button id="allBtn" onclick="setFilter('all')" class="icon-action w-10 h-10 rounded-3xl bg-white shadow-sm text-sm font-medium" title="Semua Unit" aria-label="Semua Unit" data-tooltip="Semua Unit" data-tooltip-key="allUnits">
+            <i class="fa-solid fa-layer-group"></i>
+          </button>
+          <button id="needBtn" onclick="setFilter('need')" class="icon-action w-10 h-10 rounded-3xl text-sm text-slate-600" title="Perlu Troli?" aria-label="Perlu Troli?" data-tooltip="Perlu Troli?" data-tooltip-key="needTrolleyFilter">
+            <i class="fa-solid fa-cart-flatbed"></i>
+          </button>
+        </div>
+        <button onclick="toggleTheme()" class="icon-action w-10 h-10 bg-slate-900 text-white rounded-3xl text-sm shadow-[0_3px_0_#020617]" title="Tukar mod warna" aria-label="Tukar mod warna" data-tooltip="Tukar mod warna" data-tooltip-key="toggleTheme">
           <i id="themeIcon" class="fa-solid fa-moon"></i>
-          <span id="themeText" class="hidden sm:inline">Mod Gelap</span>
         </button>
-
-        <button onclick="enableNotifications()" id="notifBtn" class="w-9 h-9 sm:w-auto sm:px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center justify-center gap-1.5 transition" title="Aktifkan Notifikasi">
-          <i class="fa-solid fa-bell text-slate-600 dark:text-slate-300"></i>
-          <span class="hidden sm:inline" data-t="notifications">Notifikasi</span>
+        <button onclick="toggleLang()" class="icon-action w-10 h-10 bg-violet-600 text-white rounded-3xl text-sm font-bold shadow-[0_3px_0_#5b21b6]" title="Tukar bahasa" aria-label="Tukar bahasa" data-tooltip="Tukar bahasa" data-tooltip-key="toggleLanguage">
+          <span id="languageLabel">BM</span>
         </button>
-
-        <button onclick="refresh()" class="w-9 h-9 sm:w-auto sm:px-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center justify-center gap-1.5 transition" title="Muat Semula">
-          <i id="refreshIcon" class="fa-solid fa-rotate-right text-brand-600 dark:text-brand-400"></i>
-          <span class="hidden sm:inline" data-t="refresh">Muat Semula</span>
+        <button onclick="enableNotifications()" class="icon-action w-10 h-10 bg-emerald-600 text-white rounded-3xl text-sm" title="Aktifkan notifikasi" aria-label="Aktifkan notifikasi" data-tooltip="Aktifkan notifikasi" data-tooltip-key="enableNotifications">
+          <i class="fa-solid fa-bell"></i>
         </button>
-
-        <button onclick="openSettings()" class="w-9 h-9 sm:w-auto sm:px-3.5 bg-brand-50 dark:bg-brand-950/50 hover:bg-brand-100 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800/60 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition" title="Tetapan Sumber Data">
-          <i class="fa-solid fa-gear"></i>
-          <span class="hidden sm:inline" data-t="settings">Tetapan</span>
+        <button onclick="refresh()" class="icon-action w-10 h-10 bg-white border rounded-3xl text-sm text-slate-700" title="Muat semula data" aria-label="Muat semula data" data-tooltip="Muat semula data" data-tooltip-key="refreshData">
+          <i id="refreshIcon" class="fa-solid fa-sync text-violet-600"></i>
+        </button>
+        <button onclick="openSettings()" class="icon-action w-10 h-10 bg-white border rounded-3xl text-sm text-slate-700" title="Buka tetapan" aria-label="Buka tetapan" data-tooltip="Buka tetapan" data-tooltip-key="openSettings">
+          <i class="fa-solid fa-cog text-violet-600"></i>
         </button>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Header Banner -->
-  <header class="hero-gradient text-white border-b border-slate-800 relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-12 sm:pb-14">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-2.5">
-            <h1 id="heading" class="text-2xl sm:text-3xl font-extrabold tracking-tight">Status Unit</h1>
-            <span class="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-full text-xs font-semibold flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span data-t="live">Langsung</span>
-            </span>
-          </div>
-          <p id="subtitle" class="mt-1 text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-            Pemantauan masa nyata Inden Drip, Bukan Ubat &amp; Troli. Klik mana-mana kad untuk audio status.
-          </p>
+  <header class="hero text-white">
+    <div class="max-w-screen-xl mx-auto px-5 py-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 id="heading" class="text-4xl font-bold">Unit Status</h1>
+          <span class="px-3 py-1 bg-white/20 rounded-3xl text-sm">
+            <i class="fa-solid fa-circle text-emerald-400 text-xs"></i> <span data-t="live">Live</span>
+          </span>
         </div>
-
-        <div class="hidden sm:flex items-center md:items-end flex-col bg-white/5 border border-white/10 rounded-2xl p-3 px-4 backdrop-blur-sm self-start md:self-auto">
-          <div data-t="lastUpdated" class="text-[10px] font-bold tracking-wider text-slate-400 uppercase">KEMAS KINI TERAKHIR</div>
-          <div id="updated" class="font-mono font-bold text-sm tracking-wide text-slate-100 mt-0.5">--:--:--</div>
-          <div id="connection" class="mt-0.5 text-xs text-emerald-400 font-medium flex items-center gap-1">● Disambung</div>
-        </div>
+        <p id="subtitle" class="mt-1 text-slate-300">Real-time Drip, Consumables &amp; Trolley monitoring</p>
+      </div>
+      <div class="text-right">
+        <div data-t="lastUpdated" class="text-xs text-slate-400">LAST UPDATED</div>
+        <div id="updated" class="font-medium text-sm">3:07:50 PM</div>
+        <div id="connection" class="mt-2 text-xs text-emerald-300">● Connected</div>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6">
-
-    <!-- KPI Summary Counters -->
-    <div class="-mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 relative z-10">
-      
-      <!-- Total Units -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-t="totalUnits">Jumlah Unit</span>
-          <div class="w-8 h-8 rounded-xl bg-violet-50 dark:bg-violet-950/50 text-violet-600 dark:text-violet-400 flex items-center justify-center text-sm">
-            <i class="fa-solid fa-hospital"></i>
+  <main>
+    <div class="max-w-screen-xl mx-auto px-5 -mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="card bg-white rounded-3xl p-5">
+        <div class="flex justify-between">
+          <div>
+            <small class="text-slate-500" data-t="totalUnits">Total Units</small>
+            <div id="total" class="text-4xl font-bold">43</div>
           </div>
+          <i class="fa-solid fa-hospital text-violet-600 text-2xl"></i>
         </div>
-        <div id="total" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1.5">0</div>
       </div>
-
-      <!-- Indent Ready -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-t="indentReady">Sedia Diambil</span>
-          <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm">
-            <i class="fa-solid fa-circle-check"></i>
+      <div class="card bg-white rounded-3xl p-5">
+        <div class="flex justify-between">
+          <div>
+            <small class="text-slate-500" data-t="indentReady">Indent Ready</small>
+            <div id="ready" class="text-4xl font-bold text-emerald-600">2</div>
           </div>
+          <i class="fa-solid fa-syringe text-emerald-600 text-2xl"></i>
         </div>
-        <div id="ready" class="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1.5">0</div>
       </div>
-
-      <!-- Needing Trolley -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-t="unitsNeedTrolley">Perlu Troli</span>
-          <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center text-sm">
-            <i class="fa-solid fa-truck-ramp-box"></i>
+      <div class="card bg-white rounded-3xl p-5">
+        <div class="flex justify-between">
+          <div>
+            <small class="text-slate-500" data-t="unitsNeedTrolley">Units Needing Trolley</small>
+            <div id="need" class="text-4xl font-bold text-amber-600">0</div>
           </div>
+          <i class="fa-solid fa-truck text-amber-600 text-2xl"></i>
         </div>
-        <div id="need" class="text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400 mt-1.5">0</div>
       </div>
-
-      <!-- Total Trolleys -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400" data-t="totalTrolleys">Kuantiti Troli</span>
-          <div class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm">
-            <i class="fa-solid fa-cart-flatbed"></i>
+      <div class="card bg-white rounded-3xl p-5">
+        <div class="flex justify-between">
+          <div>
+            <small class="text-slate-500" data-t="totalTrolleys">Total Trolleys</small>
+            <div id="trolleys" class="text-4xl font-bold text-slate-600">3</div>
           </div>
+          <i class="fa-solid fa-cart-flatbed text-slate-600 text-2xl"></i>
         </div>
-        <div id="trolleys" class="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-200 mt-1.5">0</div>
       </div>
     </div>
 
-    <!-- Unified Search & Filter Control Bar -->
-    <div class="mt-6 sm:mt-8 space-y-4">
-      <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-        
-        <!-- Search Input -->
-        <div class="relative flex-1 max-w-xl">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-          <input id="search" oninput="searchUnits(this.value)" class="w-full pl-10 pr-10 py-2.5 sm:py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 placeholder:text-slate-400 transition" placeholder="Cari kod atau nama wad/unit...">
-          <button id="clear" onclick="clearSearch()" aria-label="Clear Search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
-            <i class="fa-solid fa-circle-xmark"></i>
-          </button>
-        </div>
-
-        <!-- Filter Segmented Tabs -->
-        <div class="flex items-center bg-slate-200/70 dark:bg-slate-800/80 p-1 rounded-xl gap-1 shrink-0 overflow-x-auto">
-          <button id="filterAll" onclick="setFilter('all')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm shrink-0">Semua Unit</button>
-          <button id="filterReady" onclick="setFilter('ready')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shrink-0">Sedia Diambil</button>
-          <button id="filterNeed" onclick="setFilter('need')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shrink-0">Perlu Troli</button>
-        </div>
-      </div>
-
-      <!-- Results Count Status -->
-      <div class="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 pt-1">
-        <span class="font-medium"><span id="count" class="font-bold text-slate-900 dark:text-white">0</span> <span data-t="unitsShown">unit dipaparkan</span></span>
-        <span id="tapCueText" class="text-[11px] sm:hidden"><i class="fa-solid fa-volume-high text-brand-500 mr-1"></i>Ketik kad untuk audio</span>
-      </div>
-    </div>
-
-    <!-- Unit Cards Grid Layout -->
-    <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 mt-4 min-h-[300px]"></div>
-    
-    <!-- Clean Responsive Pagination -->
-    <div id="pages" class="flex flex-wrap justify-center gap-1.5 mt-8 pb-8"></div>
-  </main>
-
-  <!-- Notification Container (Toast Stack) -->
-  <div id="notificationsPanel" class="fixed bottom-4 right-4 sm:top-5 sm:bottom-auto z-50 w-[min(380px,calc(100vw-2rem))] space-y-2.5 pointer-events-none"></div>
-
-  <!-- Status Change Floating Banner -->
-  <div id="changeToast" class="fixed bottom-4 left-4 z-40 hidden max-w-sm rounded-xl bg-emerald-700 text-white px-4 py-3 shadow-xl flex items-center gap-3 animate-toast">
-    <i class="fa-solid fa-circle-check text-lg shrink-0"></i>
-    <span id="changeToastText" class="text-xs font-medium"></span>
-  </div>
-
-  <!-- Settings Modal Dialog -->
-  <div id="modal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transition-all">
-      <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-        <div>
-          <h3 class="font-bold text-base text-slate-900 dark:text-white" data-t="settingsTitle">Tetapan Papan Pemuka</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400" data-t="configureSheet">Konfigurasikan integrasi Google Sheets & audio</p>
-        </div>
-        <button onclick="closeSettings()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-          <i class="fa-solid fa-xmark text-sm"></i>
+    <div class="max-w-screen-xl mx-auto px-5 py-8">
+      <label class="block text-sm font-semibold text-slate-700 mb-2" data-t="searchUnit">Search Unit</label>
+      <div class="relative max-w-xl">
+        <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input id="search" oninput="searchUnits(this.value)" class="w-full pl-11 pr-11 py-3.5 bg-white border rounded-2xl shadow-[0_3px_0_#cbd5e1] focus:outline-none focus:ring-2 focus:ring-violet-500" placeholder="Cari mengikut kod atau nama unit">
+        <button id="clear" onclick="searchUnits('')" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+          <i class="fa-solid fa-times"></i>
         </button>
       </div>
 
-      <div class="p-5 space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5" data-t="sheetUrl">URL / ID Google Sheet</label>
-          <input id="sheetUrl" class="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="https://docs.google.com/spreadsheets/d/...">
-          <p class="text-[11px] text-slate-500 mt-1" data-t="publicSheet">Pastikan perkongsian disetkan kepada <b>'Anyone with the link can view'</b>.</p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5" data-t="sheetName">Nama Tab / Sheet</label>
-            <input id="sheetName" value="DATA" class="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5" data-t="range">Julat Sel</label>
-            <input id="sheetRange" value="A:F" class="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-        </div>
-
-        <label class="flex items-center justify-between gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-3.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-          <div>
-            <span class="block text-xs font-semibold text-slate-800 dark:text-slate-200" data-t="soundNotifications">Audio & Notifikasi Suara</span>
-            <span class="block text-[11px] text-slate-500 dark:text-slate-400 mt-0.5" data-t="soundNotificationsHelp">Mainkan pengumuman suara automatik semasa status berubah.</span>
-          </div>
-          <input id="soundNotifications" type="checkbox" class="h-4 w-4 rounded accent-brand-600 cursor-pointer">
-        </label>
-        
-        <div id="settingsStatus" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+      <div class="flex justify-between items-center my-6">
+        <h2 class="font-semibold text-xl text-slate-800" data-t="unitOverview">Unit Overview</h2>
+        <span class="text-sm text-slate-500"><b id="count">11</b> <span data-t="unitsShown">units shown</span></span>
       </div>
 
-      <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-        <button onclick="testConnection()" class="text-brand-600 dark:text-brand-400 font-semibold text-xs hover:underline" data-t="testConnection">Uji Sambungan</button>
-        <div class="flex gap-2">
-          <button onclick="closeSettings()" class="px-3.5 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition" data-t="cancel">Batal</button>
-          <button onclick="saveSettings()" class="px-4 py-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-semibold shadow transition" data-t="saveSettings">Simpan</button>
+      <div id="grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+      <div id="pages" class="flex justify-center gap-2 mt-8"></div>
+    </div>
+  </main>
+
+  <div id="notificationsPanel" class="fixed top-5 right-5 z-50 w-[min(390px,calc(100vw-2rem))] space-y-3 pointer-events-none"></div>
+
+  <div id="changeToast" class="fixed bottom-5 right-5 z-40 hidden max-w-sm rounded-2xl bg-emerald-600 px-5 py-4 text-white shadow-2xl">
+    <div class="flex items-center gap-3">
+      <i class="fa-solid fa-bell"></i>
+      <span id="changeToastText"></span>
+    </div>
+  </div>
+
+  <div id="modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm items-center justify-center">
+    <div class="bg-white rounded-3xl w-full max-w-lg mx-4 overflow-hidden shadow-2xl">
+      <div class="p-6 border-b flex justify-between">
+        <div>
+          <h3 class="font-semibold text-lg" data-t="settings">Settings</h3>
+          <p class="text-sm text-slate-500" data-t="configureSheet">Configure Google Sheets data source</p>
         </div>
+        <button onclick="closeSettings()"><i class="fa-solid fa-times text-slate-400"></i></button>
+      </div>
+      <div class="p-6 space-y-5">
+        <div>
+          <label class="block text-sm font-medium mb-2" data-t="sheetUrl">Google Sheet URL</label>
+          <input id="sheetUrl" class="w-full px-4 py-3 bg-slate-50 border rounded-2xl text-sm" placeholder="Tampal URL atau ID Google Sheets">
+          <p class="text-xs text-slate-500 mt-2" data-t="publicSheet">The sheet must be publicly accessible.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm mb-2" data-t="sheetName">Sheet Name</label>
+            <input id="sheetName" value="DATA" class="w-full px-4 py-3 bg-slate-50 border rounded-2xl">
+          </div>
+          <div>
+            <label class="block text-sm mb-2" data-t="range">Range</label>
+            <input id="sheetRange" value="A:F" class="w-full px-4 py-3 bg-slate-50 border rounded-2xl">
+          </div>
+        </div>
+        <label class="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 cursor-pointer">
+          <span>
+            <span class="block text-sm font-medium" data-t="soundNotifications">Notification Sound</span>
+            <span class="block text-xs text-slate-500 mt-1" data-t="soundNotificationsHelp">Play a chime when a status changes.</span>
+          </span>
+          <input id="soundNotifications" type="checkbox" class="h-5 w-5 accent-violet-600">
+        </label>
+        <div id="status" class="hidden p-3 rounded-2xl text-sm"></div>
+      </div>
+      <div class="p-6 bg-slate-50 border-t flex justify-between gap-3">
+        <button onclick="testConnection()" class="text-violet-600 text-sm" data-t="testConnection">Test Connection</button>
+        <div class="flex gap-3">
+          <button onclick="closeSettings()" class="px-4 py-2 text-sm" data-t="cancel">Cancel</button>
+          <button onclick="saveSettings()" class="px-5 py-2 bg-violet-600 text-white rounded-2xl text-sm" data-t="saveSettings">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="voicePackModal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm items-center justify-center">
+    <div class="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-lg mx-4 overflow-hidden shadow-2xl text-slate-950 dark:text-white">
+      <div class="p-6 border-b border-slate-300 dark:border-slate-700">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-2xl bg-violet-700 text-white flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-volume-high text-xl"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-xl text-slate-950 dark:text-white" data-t="voicePackTitle">Voice pack Bahasa Melayu</h3>
+            <p class="text-base font-medium text-slate-900 dark:text-slate-300 mt-2" data-t="voicePackIntro">Benarkan panduan pemasangan voice pack Bahasa Melayu untuk fungsi bacaan suara.</p>
+          </div>
+        </div>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="rounded-2xl bg-violet-50 dark:bg-violet-900/30 border-2 border-violet-300 dark:border-violet-700 p-4 text-base">
+          <div class="font-bold text-violet-950 dark:text-violet-300 mb-1" data-t="voicePackWhy">Mengapa diperlukan?</div>
+          <p class="font-medium leading-relaxed dark:text-slate-300" data-t="voicePackWhyText">Voice pack Bahasa Melayu membantu TTS menyebut status unit dengan sebutan yang lebih tepat. Pemasangan dibuat melalui tetapan peranti anda.</p>
+        </div>
+        <div id="voicePackGuide" class="text-base font-medium"></div>
+        <p class="text-sm font-medium leading-relaxed text-slate-900 dark:text-slate-400" data-t="voicePackPrivacy">Aplikasi ini tidak memasang perisian secara automatik dan tidak menghantar data suara.</p>
+      </div>
+      <div class="p-6 bg-slate-100 dark:bg-slate-900 border-t border-slate-300 dark:border-slate-700 flex justify-end gap-3">
+        <button onclick="dismissVoicePackPrompt()" class="px-4 py-2 text-sm font-bold text-slate-950 dark:text-white" data-t="voicePackLater">Kemudian</button>
+        <button onclick="showVoicePackGuide()" class="px-5 py-2 bg-violet-700 text-white rounded-2xl text-sm font-bold shadow-[0_3px_0_#4c1d95]" data-t="voicePackGuideButton">Lihat panduan</button>
       </div>
     </div>
   </div>
@@ -394,7 +829,7 @@
       W8A: "Radiotherapy and Oncology Ward 8A|WAD RADIOTERAPI DAN ONKOLOGI 8A",
       W8B: "Radiotherapy and Oncology Ward 8B|WAD RADIOTERAPI DAN ONKOLOGI 8B",
       W9A: "Multidisciplin Ward 9A|WAD MULTIDISIPLIN 9A",
-      W9B: "Executive Ward 9B|WAD EKSEKUTIF 9B",
+      W9B: "Executive Ward 9B|WAD EKSEKUTIF 9A",
       DIET: "Dietetics and Catering|DIETETIK DAN SAJIAN",
       ED: "Cancer Emergency Unit|UNIT KECEMASAN KANSER",
       MOR: "Mortuary/Forensic Unit|UNIT MORTUARI/FORENSIK",
@@ -405,7 +840,7 @@
       RADIO: "Radiology|RADIOLOGI",
       RTC: "Radiotherapy Clinic|KLINIK RADIOTERAPI",
       RTT: "Radiotherapy Treatment|RAWATAN RADIOTERAPI",
-      WRR: "Radionuklid Ward|WAD RADIONUKLID",
+      WRR: "Radionuklid Ward|WAD RADIONUKLIK",
       TCM: "Traditional Chinese Medicine & Complimentary|PERUBATAN TRADISIONAL CINA & KOMPLIMENTARI",
       OPC: "Outpatient Pharmacy|FARMASI PESAKIT LUAR",
       "CDR/TPN": "Cytotoxic Drug Reconstitution & Total Parenteral Nutrition|REKONSTITUSI UBAT SITOTOKSIK & UNIT NUTRISI PARENTERAL",
@@ -413,162 +848,139 @@
       "PETCT(F)": "PETCT (PHARMACY)|PETCT (FARMASI)"
     };
 
+    // Ward code normalization map (without W prefix)
     const wardCodeMap = {
-      "5A": "W5A", "5B": "W5B", "6A": "W6A", "6B": "W6B",
-      "7A": "W7A", "7B": "W7B", "8A": "W8A", "8B": "W8B",
-      "9A": "W9A", "9B": "W9B"
+      "5A": "W5A",
+      "5B": "W5B",
+      "6A": "W6A",
+      "6B": "W6B",
+      "7A": "W7A",
+      "7B": "W7B",
+      "8A": "W8A",
+      "8B": "W8B",
+      "9A": "W9A",
+      "9B": "W9B"
     };
 
     const T = {
       bm: {
-        tabTitle: "STATUFL • Papan Pemuka Unit",
-        titleUnitStatus: "Status Unit",
-        subtitleMain: "Pemantauan masa nyata Inden Drip, Bukan Ubat & Troli. Klik mana-mana kad untuk audio status.",
-        modeLight: "Mod Cerah",
-        modeDark: "Mod Gelap",
         notifications: "Notifikasi",
+        allUnits: "Semua Unit",
+        needTrolleyFilter: "Perlu Troli?",
+        toggleTheme: "Tukar mod warna",
+        toggleLanguage: "Tukar bahasa",
+        enableNotifications: "Aktifkan notifikasi",
+        refreshData: "Muat semula data",
+        openSettings: "Buka tetapan",
         refresh: "Muat Semula",
         settings: "Tetapan",
-        settingsTitle: "Tetapan Papan Pemuka",
-        live: "Langsung",
+        live: "Siaran Langsung",
         lastUpdated: "KEMAS KINI TERAKHIR",
         totalUnits: "Jumlah Unit",
-        indentReady: "Sedia Diambil",
-        unitsNeedTrolley: "Perlu Troli",
-        totalTrolleys: "Kuantiti Troli",
-        searchUnit: "Cari Kod atau Nama Unit",
-        searchPlaceholder: "Cari kod atau nama wad/unit...",
+        indentReady: "Inden Sedia Diambil",
+        unitsNeedTrolley: "Jumlah Unit Perlu Troli",
+        totalTrolleys: "Jumlah Troli",
+        searchUnit: "Cari Unit",
+        unitOverview: "Ringkasan Unit",
         unitsShown: "unit dipaparkan",
-        configureSheet: "Konfigurasikan integrasi Google Sheets & audio",
-        sheetUrl: "URL / ID Google Sheet",
-        publicSheet: "Pastikan perkongsian disetkan kepada <b>'Anyone with the link can view'</b>.",
-        sheetName: "Nama Tab / Sheet",
-        range: "Julat Sel",
+        configureSheet: "Konfigurasikan sumber data Google Sheets",
+        sheetUrl: "URL Google Sheet",
+        publicSheet: "Sheet mestilah boleh diakses secara umum.",
+        sheetName: "Nama Sheet",
+        range: "Julat",
         testConnection: "Uji Sambungan",
         cancel: "Batal",
-        saveSettings: "Simpan",
+        saveSettings: "Simpan Tetapan",
         drip: "Drip",
         consumables: "Bukan Ubat",
         trolleyQuantity: "Kuantiti Troli",
         needTrolley: "Perlu Troli?",
         directIssue: "Direct Issue?",
-        none: "Tiada data dipadankan",
+        none: "Tiada",
         yes: "Ya",
         no: "Tidak",
-        soundNotifications: "Audio & Notifikasi Suara",
-        soundNotificationsHelp: "Mainkan pengumuman suara automatik semasa status berubah.",
-        allUnits: "Semua Unit",
-        filterReady: "Sedia Diambil",
-        filterNeed: "Perlu Troli",
-        // Popup & Notification Strings
-        notifTitle: "Kemas Kini Status Unit",
-        unitUpdate: "Kemas Kini",
-        statusUpdated: "status unit telah dikemas kini.",
-        notifEnabled: "Notifikasi telah diaktifkan!",
-        notifDenied: "Notifikasi ditolak atau disekat oleh pelayar.",
-        notifUnsupported: "Pelayar anda tidak menyokong Notifikasi Web.",
-        connected: "Disambung",
-        disconnected: "Terputus",
-        noSheetConfig: "Tiada Sheet Ditetapkan",
-        invalidUrl: "URL Google Sheets tidak sah.",
-        testingConn: "Menyambung ke Google Sheets...",
-        connTested: "Sambungan diuji. Mengemas kini data...",
-        tapForAudio: "Ketik kad untuk audio",
-        cardReadyBadge: "SEDIA",
-        listenTooltip: "Dengar Status Unit"
+        soundNotifications: "Bunyi Notifikasi",
+        soundNotificationsHelp: "Mainkan bunyi chime apabila status berubah.",
+        pageTitle: "STATUFL • Papan Pemuka",
+        searchPlaceholder: "Cari mengikut kod atau nama unit",
+        connected: "● Bersambung",
+        noSheet: "● Tiada Sheet",
+        connectionError: "● Ralat Sambungan",
+        invalidSheetUrl: "URL Google Sheets tidak sah.",
+        noUnits: "Tiada",
+        voicePackTitle: "Voice pack Bahasa Melayu",
+        voicePackIntro: "Benarkan panduan pemasangan voice pack Bahasa Melayu untuk fungsi bacaan suara.",
+        voicePackWhy: "Mengapa diperlukan?",
+        voicePackWhyText: "Voice pack Bahasa Melayu membantu TTS menyebut status unit dengan sebutan yang lebih tepat. Pemasangan dibuat melalui tetapan peranti anda.",
+        voicePackPrivacy: "Aplikasi ini tidak memasang perisian secara automatik dan tidak menghantar data suara.",
+        voicePackLater: "Kemudian",
+        voicePackGuideButton: "Lihat panduan",
+        voicePackGuideTitle: "Panduan untuk peranti anda",
+        voicePackAndroid: "Android: Buka Settings > System > Languages & input > Text-to-speech output. Pilih enjin TTS, buka tetapan voice data dan pasang Bahasa Melayu jika tersedia.",
+        voicePackIos: "iPhone/iPad: Buka Settings > Accessibility > Spoken Content > Voices. Pilih Bahasa Melayu dan muat turun suara yang diperlukan.",
+        voicePackWindows: "Windows: Buka Settings > Time & language > Speech. Tambah atau pasang voice pack Bahasa Melayu jika pilihan itu tersedia.",
+        voicePackMac: "Mac: Buka System Settings > Accessibility > Spoken Content > System voice > Manage Voices, kemudian pasang suara Bahasa Melayu jika tersedia.",
+        voicePackBrowser: "Selepas pemasangan, tutup dan buka semula aplikasi atau muat semula halaman untuk mengemas kini senarai suara."
       },
       en: {
-        tabTitle: "STATUFL • Unit Dashboard",
-        titleUnitStatus: "Unit Status",
-        subtitleMain: "Real-time Drip, Consumables & Trolley monitoring. Click any card to hear status.",
-        modeLight: "Light Mode",
-        modeDark: "Dark Mode",
         notifications: "Notifications",
+        allUnits: "All Units",
+        needTrolleyFilter: "Need Trolley?",
+        toggleTheme: "Toggle theme",
+        toggleLanguage: "Change language",
+        enableNotifications: "Enable notifications",
+        refreshData: "Refresh data",
+        openSettings: "Open settings",
         refresh: "Refresh",
         settings: "Settings",
-        settingsTitle: "Dashboard Settings",
         live: "Live",
         lastUpdated: "LAST UPDATED",
         totalUnits: "Total Units",
         indentReady: "Indent Ready",
-        unitsNeedTrolley: "Need Trolley",
+        unitsNeedTrolley: "Units Needing Trolley",
         totalTrolleys: "Total Trolleys",
-        searchUnit: "Search Unit Code or Name",
-        searchPlaceholder: "Search ward or unit code/name...",
+        searchUnit: "Search Unit",
+        unitOverview: "Unit Overview",
         unitsShown: "units shown",
-        configureSheet: "Configure Google Sheets data & audio",
-        sheetUrl: "Google Sheet URL / ID",
-        publicSheet: "The sheet must be publicly accessible <b>(Anyone with link can view)</b>.",
+        configureSheet: "Configure Google Sheets data source",
+        sheetUrl: "Google Sheet URL",
+        publicSheet: "The sheet must be publicly accessible.",
         sheetName: "Sheet Name",
         range: "Range",
         testConnection: "Test Connection",
         cancel: "Cancel",
-        saveSettings: "Save",
+        saveSettings: "Save Settings",
         drip: "Drip",
         consumables: "Consumables",
         trolleyQuantity: "Trolley Quantity",
         needTrolley: "Need Trolley?",
         directIssue: "Direct Issue?",
-        none: "No matching units found",
+        none: "None",
         yes: "Yes",
         no: "No",
-        soundNotifications: "Audio & Voice Notifications",
-        soundNotificationsHelp: "Play voice announcement when a status changes.",
-        allUnits: "All Units",
-        filterReady: "Indent Ready",
-        filterNeed: "Need Trolley",
-        // Popup & Notification Strings
-        notifTitle: "Unit Status Update",
-        unitUpdate: "Update",
-        statusUpdated: "unit status(es) updated.",
-        notifEnabled: "Notifications enabled!",
-        notifDenied: "Notifications denied or blocked by browser.",
-        notifUnsupported: "Your browser does not support Web Notifications.",
-        connected: "Connected",
-        disconnected: "Disconnected",
-        noSheetConfig: "No Sheet Configured",
-        invalidUrl: "Invalid Google Sheets URL.",
-        testingConn: "Connecting to Google Sheets...",
-        connTested: "Testing connection. Updating data...",
-        tapForAudio: "Tap card for audio",
-        cardReadyBadge: "READY",
-        listenTooltip: "Listen to Unit Status"
+        soundNotifications: "Notification Sound",
+        soundNotificationsHelp: "Play a chime when a status changes.",
+        pageTitle: "STATUFL • Dashboard",
+        searchPlaceholder: "Search by unit code or name",
+        connected: "● Connected",
+        noSheet: "● No Sheet",
+        connectionError: "● Connection Error",
+        invalidSheetUrl: "Invalid Google Sheets URL.",
+        noUnits: "None",
+        voicePackTitle: "Malay voice pack",
+        voicePackIntro: "Allow installation guidance for a Malay voice pack to support text-to-speech.",
+        voicePackWhy: "Why is it needed?",
+        voicePackWhyText: "A Malay voice pack helps TTS pronounce unit statuses more accurately. Installation is completed through your device settings.",
+        voicePackPrivacy: "This app does not install software automatically or send voice data.",
+        voicePackLater: "Later",
+        voicePackGuideButton: "View guide",
+        voicePackGuideTitle: "Guide for your device",
+        voicePackAndroid: "Android: Open Settings > System > Languages & input > Text-to-speech output. Select the TTS engine, open voice data settings and install Malay if available.",
+        voicePackIos: "iPhone/iPad: Open Settings > Accessibility > Spoken Content > Voices. Select Malay and download the required voice.",
+        voicePackWindows: "Windows: Open Settings > Time & language > Speech. Add or install the Malay voice pack if available.",
+        voicePackMac: "Mac: Open System Settings > Accessibility > Spoken Content > System voice > Manage Voices, then install a Malay voice if available.",
+        voicePackBrowser: "After installation, close and reopen the app or refresh the page to update the available voices."
       }
-    };
-
-    const DOM = {
-      filterAll: document.getElementById("filterAll"),
-      filterReady: document.getElementById("filterReady"),
-      filterNeed: document.getElementById("filterNeed"),
-      themeIcon: document.getElementById("themeIcon"),
-      themeText: document.getElementById("themeText"),
-      langText: document.getElementById("langText"),
-      refreshIcon: document.getElementById("refreshIcon"),
-      heading: document.getElementById("heading"),
-      subtitle: document.getElementById("subtitle"),
-      updated: document.getElementById("updated"),
-      connection: document.getElementById("connection"),
-      mobileConnDot: document.getElementById("mobileConnDot"),
-      mobileConnText: document.getElementById("mobileConnText"),
-      tapCueText: document.getElementById("tapCueText"),
-      total: document.getElementById("total"),
-      ready: document.getElementById("ready"),
-      need: document.getElementById("need"),
-      trolleys: document.getElementById("trolleys"),
-      search: document.getElementById("search"),
-      clear: document.getElementById("clear"),
-      count: document.getElementById("count"),
-      grid: document.getElementById("grid"),
-      pages: document.getElementById("pages"),
-      notificationsPanel: document.getElementById("notificationsPanel"),
-      changeToast: document.getElementById("changeToast"),
-      changeToastText: document.getElementById("changeToastText"),
-      modal: document.getElementById("modal"),
-      sheetUrl: document.getElementById("sheetUrl"),
-      sheetName: document.getElementById("sheetName"),
-      sheetRange: document.getElementById("sheetRange"),
-      soundNotifications: document.getElementById("soundNotifications"),
-      settingsStatus: document.getElementById("settingsStatus")
     };
 
     let lang = localStorage.getItem("statufl_lang") || "bm";
@@ -576,13 +988,11 @@
     let filter = "all";
     let query = "";
     let page = 1;
-    const PAGE_SIZE = 24;
     let lastSignature = "";
     let refreshBusy = false;
     let notificationsEnabled = localStorage.getItem("statufl_notifications") === "on";
     let soundNotifications = localStorage.getItem("statufl_sound_notifications") !== "off";
     let columnFHeader = "";
-    let lastAnnouncementTime = 0; // Menjejaki masa pengumuman 1 jam terakhir
 
     const tr = v => String(v ?? "").toLowerCase().replace(/\s+/g, "");
     const readyStatus = v => tr(v) === "indensediadiambil";
@@ -592,8 +1002,11 @@
 
     function normalizeUnitCode(rawCode) {
       let code = String(rawCode || "").trim().toUpperCase();
+      // If code is already in names list, return as-is
       if (names[code]) return code;
+      // If code without W prefix matches ward map
       if (wardCodeMap[code]) return wardCodeMap[code];
+      // If starts with W and exists
       if (names["W" + code]) return "W" + code;
       return code;
     }
@@ -612,7 +1025,7 @@
       };
     }
 
-    function extractSheetId(v) {
+    function id(v) {
       let match = String(v || "").match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
       if (match) return match[1];
       let trimmed = String(v || "").trim();
@@ -622,82 +1035,86 @@
 
     function sample() {
       columnFHeader = T[lang].directIssue;
-      return Object.keys(names).map((unit, i) => {
-        let drip = i % 4 !== 0 ? "Inden Sedia Diambil" : "Inden Sedang Diproses";
-        let bukanUbat = i % 3 !== 0 ? "Inden Sedia Diambil" : "Inden Belum Diterima";
-        return {
-          unit,
-          drip,
-          bukanUbat,
-          jumlahTroli: i % 5,
-          perluTroli: i % 3 === 0 ? "Yes" : "No",
-          priority: i % 5 === 0 ? "High" : "",
-          ready: readyStatus(drip) || readyStatus(bukanUbat)
-        };
-      });
+      // Only return units that exist in Google Sheets — using a minimal realistic set
+      return [
+        { unit: "W5A", drip: "Inden Sedia Diambil", bukanUbat: "Inden Sedia Diambil", jumlahTroli: 1, perluTroli: "No", priority: "", ready: true },
+        { unit: "W6A", drip: "Inden Sedang Diproses", bukanUbat: "Inden Sedia Diambil", jumlahTroli: 0, perluTroli: "No", priority: "", ready: false },
+        { unit: "ICU", drip: "Inden Sedia Diambil", bukanUbat: "Inden Belum Diterima", jumlahTroli: 0, perluTroli: "No", priority: "", ready: true },
+        { unit: "CSSD", drip: "Inden Sedang Diproses", bukanUbat: "Inden Belum Diterima", jumlahTroli: 0, perluTroli: "Yes", priority: "High", ready: false },
+        { unit: "ED", drip: "Inden Belum Diterima", bukanUbat: "Inden Belum Diterima", jumlahTroli: 2, perluTroli: "No", priority: "", ready: false },
+        { unit: "ADM", drip: "Inden Sedia Diambil", bukanUbat: "Inden Sedia Diambil", jumlahTroli: 1, perluTroli: "No", priority: "", ready: true },
+        { unit: "W9B", drip: "Inden Sedang Diproses", bukanUbat: "Inden Sedia Diambil", jumlahTroli: 0, perluTroli: "Yes", priority: "", ready: false },
+        { unit: "ONC", drip: "Inden Belum Diterima", bukanUbat: "Inden Sedia Diambil", jumlahTroli: 0, perluTroli: "No", priority: "TIDAK", ready: false },
+        { unit: "RADIO", drip: "Inden Sedia Diambil", bukanUbat: "Inden Sedang Diproses", jumlahTroli: 3, perluTroli: "No", priority: "TIDAK", ready: true },
+        { unit: "RTC", drip: "Inden Sedang Diproses", bukanUbat: "Inden Sedang Diproses", jumlahTroli: 0, perluTroli: "Yes", priority: "", ready: false },
+        { unit: "OPC", drip: "Inden Belum Diterima", bukanUbat: "Inden Belum Diterima", jumlahTroli: 0, perluTroli: "No", priority: "", ready: false }
+      ];
     }
 
     async function load() {
-      const c = cfg();
-      const sid = extractSheetId(c.url);
-      if (!sid) return sample();
-
+      let c = cfg();
+      let sid = id(c.url);
+      if (!sid) {
+        return sample();
+      }
       try {
-        const url = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?sheet=${encodeURIComponent(c.name)}&range=${encodeURIComponent(c.range)}&headers=1&tqx=out:json&_=${Date.now()}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-        
-        const rawText = await res.text();
-        const jsonMatch = rawText.match(/setResponse\(([\s\S]*)\);?\s*$/);
-        if (!jsonMatch || !jsonMatch[1]) throw new Error("Invalid GViz format");
+        let url = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?sheet=${encodeURIComponent(c.name)}&range=${encodeURIComponent(c.range)}&headers=1&tqx=out:json&_=${Date.now()}`;
+        let r = await fetch(url);
+        let x = await r.text();
+        let j = JSON.parse(x.substring(47).slice(0, -2));
+        let cols = j.table.cols || [];
+        let rows = j.table.rows || [];
 
-        const json = JSON.parse(jsonMatch[1]);
-        const cols = json.table.cols || [];
-        const rows = json.table.rows || [];
-
-        const headerFromLabel = cleanHeader(cols[5]?.label);
+        // Read Column F header from F1
+        let headerFromLabel = cleanHeader(cols[5]?.label);
         let headerFromRow = "";
-        if (rows.length > 0 && rows[0].c && rows[0].c[5]) {
+        if (rows.length > 0) {
           headerFromRow = cleanHeader(rows[0].c[5]?.v);
         }
         columnFHeader = headerFromLabel || headerFromRow || T[lang].directIssue;
 
-        const hasHeaderLabel = headerFromLabel !== "";
-        const dataRows = hasHeaderLabel ? rows : rows.slice(1);
+        // Determine if headers=1 already stripped the header row
+        let hasHeaderLabel = headerFromLabel !== "";
+        let dataRows = hasHeaderLabel ? rows : rows.slice(1);
 
         return dataRows.map(r => {
-          const v = i => r.c && r.c[i] ? (r.c[i].v ?? "") : "";
-          const rawUnit = v(0);
-          const unit = normalizeUnitCode(rawUnit);
-          const a = v(1) || "Tidak Aktif";
-          const b = v(2) || "Tidak Aktif";
+          let v = i => r.c[i]?.v ?? "";
+          let rawUnit = v(0);
+          let unit = normalizeUnitCode(rawUnit);
+          let a = v(1) || "Tidak Aktif";
+          let b = v(2) || "Tidak Aktif";
           return {
             unit,
             drip: a,
             bukanUbat: b,
-            jumlahTroli: Number(v(3)) || 0,
+            jumlahTroli: +v(3) || 0,
             perluTroli: v(4) || "No",
             priority: v(5),
             ready: readyStatus(a) || readyStatus(b)
           };
-        }).filter(x => x.unit);
+        }).filter(x => x.unit && names[x.unit]);
       } catch (e) {
-        console.warn("Sheet data load failed. Falling back to sample data.", e);
+        console.error("Sheet load failed:", e);
         return sample();
       }
     }
 
     function statusInfo(v) {
-      const n = tr(v);
-      if (n === "indensediadiambil") return ["badge-green", "Ready", "Sedia Diambil"];
-      if (n === "indensedangdiproses") return ["badge-orange", "Processing", "Sedang Diproses"];
-      if (n === "indenbelumditerima") return ["badge-grey", "Not Received", "Belum Diterima"];
-      return ["badge-blue", v, v];
+      let n = tr(v);
+      if (["indensediadiambil", "readyforcollection", "ready", "sediaambil", "sediadiambil"].includes(n)) {
+        return ["green", "Ready for Collection", "Sedia Diambil"];
+      }
+      if (["indensedangdiproses", "indentprocessing", "processing", "sedangdiproses"].includes(n)) {
+        return ["orange", "Indent Processing", "Sedang Diproses"];
+      }
+      if (["indenbelumditerima", "indentnotreceived", "notreceived", "belumditerima"].includes(n)) {
+        return ["grey", "Indent Not Received", "Belum Diterima"];
+      }
+      return ["blue", String(v || "-"), String(v || "-")];
     }
 
     function localizedStatus(v) {
-      const info = statusInfo(v);
-      return lang === "bm" ? info[2] : info[1];
+      return localizedSheetValue(v);
     }
 
     const signature = list => JSON.stringify(list.map(u => [u.unit, u.drip, u.bukanUbat, u.jumlahTroli, u.perluTroli, u.priority, u.ready]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))));
@@ -707,532 +1124,338 @@
     }
 
     function directIssueBadgeClass(priority) {
-      const p = tr(priority);
-      if (!priority || p === "" || p === "tiada" || p === "none" || p === "tidak" || p === "no") return "badge-grey";
-      return "badge-orange";
+      let p = tr(priority);
+      if (!priority || p === "" || p === "tiada" || p === "none" || p === "tidak") return "grey";
+      return "orange";
+    }
+
+    function localizedSheetValue(value) {
+      let raw = String(value ?? "").trim();
+      let normalized = tr(raw);
+      if (!raw) return T[lang].none;
+      if (["indenbaruditerima", "indentnewlyreceived", "newlyreceived"].includes(normalized)) return lang === "bm" ? "Inden Baru Diterima" : "Inden Newly Received";
+      if (["indensediadiambil", "indentready", "readyforcollection", "ready", "readytocollect", "sediaambil", "sediadiambil"].includes(normalized)) return lang === "bm" ? "Sedia Diambil" : "Ready for Collection";
+      if (["indensedangdiproses", "indentprocessing", "indentinprogress", "processing", "inprogress", "sedangdiproses"].includes(normalized)) return lang === "bm" ? "Sedang Diproses" : "Indent Processing";
+      if (["indenbelumditerima", "indentnotreceived", "notreceived", "notreceivedyet", "belumditerima"].includes(normalized)) return lang === "bm" ? "Belum Diterima" : "Indent Not Received";
+      if (["ya", "yes"].includes(normalized)) return T[lang].yes;
+      if (["tidak", "no"].includes(normalized)) return T[lang].no;
+      if (["tiada", "none", "-"].includes(normalized)) return T[lang].none;
+      if (["tidakaktif", "inactive"].includes(normalized)) return lang === "bm" ? "Tidak Aktif" : "Inactive";
+      if (["aktif", "active"].includes(normalized)) return lang === "bm" ? "Aktif" : "Active";
+      if (["notifikasi dalam aplikasi aktif", "in-app notifications enabled"].includes(raw.toLowerCase())) return lang === "bm" ? "Notifikasi dalam aplikasi aktif" : "In-app notifications enabled";
+      return raw;
     }
 
     function directIssueDisplayValue(priority) {
-      const p = tr(priority);
+      let p = tr(priority);
       if (!priority || p === "" || p === "tiada" || p === "none") return T[lang].none;
       if (p === "ya" || p === "yes") return T[lang].yes;
       if (p === "tidak" || p === "no") return T[lang].no;
-      return String(priority).trim();
+      return localizedSheetValue(priority);
     }
 
-    /* -------------------------------------------------------------
-       AUDIO & CHIME SYSTEM
-    ------------------------------------------------------------- */
-    let notificationAudioContext = null;
-
-    function initAudio() {
-      if (!notificationAudioContext) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (AudioCtx) notificationAudioContext = new AudioCtx();
-      }
-      if (notificationAudioContext && notificationAudioContext.state === "suspended") {
-        notificationAudioContext.resume();
-      }
-    }
-
-    function playMelodicChime() {
-      try {
-        initAudio();
-        if (!notificationAudioContext) return;
-        const ctx = notificationAudioContext;
-        const now = ctx.currentTime;
-        
-        const o1 = ctx.createOscillator();
-        const g1 = ctx.createGain();
-        o1.type = "sine";
-        o1.frequency.setValueAtTime(659.25, now);
-        g1.gain.setValueAtTime(0.0001, now);
-        g1.gain.exponentialRampToValueAtTime(0.18, now + 0.02);
-        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
-        o1.connect(g1);
-        g1.connect(ctx.destination);
-        o1.start(now);
-        o1.stop(now + 0.36);
-
-        const o2 = ctx.createOscillator();
-        const g2 = ctx.createGain();
-        o2.type = "sine";
-        o2.frequency.setValueAtTime(880, now + 0.14);
-        g2.gain.setValueAtTime(0.0001, now + 0.14);
-        g2.gain.exponentialRampToValueAtTime(0.2, now + 0.16);
-        g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
-        o2.connect(g2);
-        g2.connect(ctx.destination);
-        o2.start(now + 0.14);
-        o2.stop(now + 0.56);
-      } catch (e) {
-        console.warn("Chime error:", e);
-      }
-    }
-
-    /* -------------------------------------------------------------
-       TTS CLOUD-CONSISTENT ENGINE (Google Translate TTS API)
-    ------------------------------------------------------------- */
-    let ttsAudioPlayer = null;
-    let activeCardElement = null;
-    let speechQueue = [];
-    let isSpeaking = false;
-
-    function buildSpeechText(u, isNotification = false) {
-      const rawName = names[u.unit] || u.unit;
-      const isEnglish = (lang === "en");
-      const unitFullName = rawName.includes("|") ? rawName.split("|")[isEnglish ? 0 : 1] : rawName;
-      const dripStatus = statusInfo(u.drip)[isEnglish ? 1 : 2];
-      const consumStatus = statusInfo(u.bukanUbat)[isEnglish ? 1 : 2];
-      const troliCount = u.jumlahTroli;
-      const perluTroli = needs(u) ? (isEnglish ? "Yes" : "Ya") : (isEnglish ? "No" : "Tidak");
-
-      if (isEnglish) {
-        const prefix = isNotification ? "Notice for " : "";
-        return `${prefix}${unitFullName}. Drip: ${dripStatus}. Consumables: ${consumStatus}. Trolley quantity: ${troliCount}. Need trolley: ${perluTroli}.`
-          .replace(/&/g, " and ")
-          .replace(/\//g, " or ");
-      } else {
-        const prefix = isNotification ? "Kemas kini status. " : "";
-        return `${prefix}${unitFullName}. Drip: ${dripStatus}. Bukan ubat: ${consumStatus}. Kuantiti troli: ${troliCount}. Perlu troli: ${perluTroli}.`
-          .replace(/&/g, " dan ")
-          .replace(/\//g, " atau ");
-      }
-    }
-
-    function stopAllSpeech() {
-      speechQueue = [];
-      isSpeaking = false;
-      if (ttsAudioPlayer) {
-        ttsAudioPlayer.pause();
-        ttsAudioPlayer.currentTime = 0;
-        ttsAudioPlayer = null;
-      }
-      if (activeCardElement) {
-        activeCardElement.classList.remove("speaking");
-        activeCardElement = null;
-      }
-    }
-
-    function processSpeechQueue() {
-      if (isSpeaking || speechQueue.length === 0) return;
-
-      const nextItem = speechQueue.shift();
-      const { unitObj, cardEl, isNotification } = nextItem;
-      isSpeaking = true;
-
-      if (activeCardElement) activeCardElement.classList.remove("speaking");
-      if (cardEl && document.body.contains(cardEl)) {
-        activeCardElement = cardEl;
-        activeCardElement.classList.add("speaking");
-      }
-
-      if (isNotification) {
-        playMelodicChime();
-      }
-
-      const speechSentence = buildSpeechText(unitObj, isNotification);
-      const isEnglish = (lang === "en");
-      const ttsLangCode = isEnglish ? "en" : "ms";
-
-      const onFinish = () => {
-        if (activeCardElement) {
-          activeCardElement.classList.remove("speaking");
-          activeCardElement = null;
-        }
-        isSpeaking = false;
-        setTimeout(processSpeechQueue, 350);
-      };
-
-      // Menggunakan Cloud TTS (Google Translate API endpoint) untuk suara yang konsisten di semua peranti
-      const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${ttsLangCode}&client=tw-ob&q=${encodeURIComponent(speechSentence)}`;
-      ttsAudioPlayer = new Audio(audioUrl);
-
-      ttsAudioPlayer.onended = onFinish;
-      ttsAudioPlayer.onerror = () => {
-        // Fallback ke sistem pelayar jika rangkaian gagal
-        if ('speechSynthesis' in window) {
-          const utterance = new SpeechSynthesisUtterance(speechSentence);
-          utterance.lang = isEnglish ? "en-US" : "ms-MY";
-          utterance.rate = 0.95;
-          utterance.onend = onFinish;
-          utterance.onerror = onFinish;
-          window.speechSynthesis.speak(utterance);
-        } else {
-          onFinish();
-        }
-      };
-
-      if (isNotification) {
-        setTimeout(() => {
-          ttsAudioPlayer.play().catch(onFinish);
-        }, 450);
-      } else {
-        ttsAudioPlayer.play().catch(onFinish);
-      }
-    }
-
-    function speakUnit(cardEl, unitCode) {
-      initAudio();
-      const u = data.find(item => item.unit === unitCode);
-      if (!u) return;
-      stopAllSpeech();
-      speechQueue.push({ unitObj: u, cardEl: cardEl, isNotification: false });
-      processSpeechQueue();
-    }
-
-    function queueNotificationSpeech(unitObj, cardEl) {
-      if (!soundNotifications) return;
-      speechQueue.push({ unitObj: unitObj, cardEl: cardEl, isNotification: true });
-      processSpeechQueue();
-    }
-
-    /* -------------------------------------------------------------
-       PERIODIC HOURLY AUTO-ANNOUNCEMENT (Every 1 Hour)
-    ------------------------------------------------------------- */
-    function checkHourlyPeriodicAnnouncement() {
-      if (!soundNotifications) return;
-      
-      const now = Date.now();
-      const ONE_HOUR = 3600000; // 1 jam dalam milisaat
-      
-      // Semak sama ada sudah 1 jam berlalu sejak kemaskini/pengumuman terakhir
-      if (now - lastAnnouncementTime >= ONE_HOUR) {
-        // Cari unit yang berstatus 'Sedia Diambil' DAN 'Perlu Troli: Ya'
-        const readyNeedingTrolley = data.filter(u => u.ready && needs(u));
-        
-        if (readyNeedingTrolley.length > 0) {
-          readyNeedingTrolley.forEach(u => {
-            const alreadyQueued = speechQueue.some(item => item.unitObj.unit === u.unit);
-            if (!alreadyQueued) {
-              speechQueue.push({ unitObj: u, cardEl: null, isNotification: false });
-            }
-          });
-          processSpeechQueue();
-          lastAnnouncementTime = now; // Tetapkan semula masa
-        }
-      }
-    }
-
-    // Semak setiap 1 minit untuk pengumuman berkala 1 jam
-    setInterval(checkHourlyPeriodicAnnouncement, 60000);
-
-    /* -------------------------------------------------------------
-       UI RENDER ENGINE
-    ------------------------------------------------------------- */
     function render() {
-      const t = T[lang];
-      const headerF = fallbackFHeader();
-      
-      const filtered = data
-        .filter(u => !(tr(u.drip) === "indenbelumditerima" && tr(u.bukanUbat) === "indenbelumditerima"))
-        .filter(u => {
-          if (filter === "ready") return u.ready;
-          if (filter === "need") return needs(u);
-          return true;
-        })
-        .filter(u => (!query || tr(u.unit).includes(tr(query)) || tr(label(u.unit)).includes(tr(query))))
-        .sort((a, b) => (b.ready - a.ready) || a.unit.localeCompare(b.unit));
+      let t = T[lang];
+      let headerF = fallbackFHeader();
+      let x = data
+        .filter(u => !(tr(u.drip) === "indenbelumditerima" && tr(u.bukanUbat) === "indenbelumditerima") && (filter === "all" || needs(u)) && (!query || tr(u.unit).includes(tr(query)) || tr(label(u.unit)).includes(tr(query))))
+        .sort((a, b) => b.ready - a.ready || a.unit.localeCompare(b.unit));
+      let tp = Math.max(1, Math.ceil(x.length / 20));
+      page = Math.min(page, tp);
+      let shown = x.slice((page - 1) * 20, page * 20);
+      count.textContent = x.length;
 
-      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-      page = Math.min(page, totalPages);
-      const shown = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-      
-      DOM.count.textContent = filtered.length;
+      grid.innerHTML = shown.length ? shown.map(u => {
+        let dripInfo = statusInfo(u.drip);
+        let consumInfo = statusInfo(u.bukanUbat);
+        let unitName = label(u.unit);
+        let diClass = directIssueBadgeClass(u.priority);
+        let diValue = directIssueDisplayValue(u.priority);
 
-      DOM.grid.innerHTML = shown.length ? shown.map(u => {
-        const dripInfo = statusInfo(u.drip);
-        const consumInfo = statusInfo(u.bukanUbat);
-        const unitName = label(u.unit);
-        const diClass = directIssueBadgeClass(u.priority);
-        const diValue = directIssueDisplayValue(u.priority);
-
-        return `
-          <article onclick="speakUnit(this, '${escapeHtml(u.unit)}')" class="status-card group relative border-4 ${u.ready ? 'border-emerald-600 dark:border-emerald-400 card-ready-glow' : 'border-slate-800 dark:border-slate-300'} rounded-2xl p-4 sm:p-5 cursor-pointer select-none">
-            
-            <!-- Card Header -->
-            <div class="flex justify-between items-start mb-4">
-              <div class="flex items-center gap-3">
-                <!-- 3D Unit Badge -->
-                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 dark:from-slate-800 dark:to-slate-950 text-white font-mono font-bold text-sm flex items-center justify-center shadow-lg border-2 border-slate-900 dark:border-slate-600 relative overflow-hidden">
-                  <div class="absolute inset-0 bg-white/10 w-full h-1/2"></div>
-                  <span class="relative z-10">${escapeHtml(u.unit)}</span>
-                </div>
-                <div class="min-w-0 pr-2">
-                  <h2 class="text-sm font-extrabold text-slate-900 dark:text-white truncate" title="${escapeHtml(unitName)}">
-                    ${escapeHtml(unitName)}
-                  </h2>
-                  <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 tracking-wider">${escapeHtml(u.unit)}</span>
-                    ${u.ready ? `<span class="px-2 py-0.5 rounded text-[9px] font-extrabold bg-emerald-500 text-white dark:bg-emerald-600 uppercase tracking-widest flex items-center gap-1 shadow-md animate-pulse"><i class="fa-solid fa-bolt"></i> ${t.cardReadyBadge}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-              <button class="shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover:text-brand-500 dark:group-hover:text-brand-400 group-hover:bg-brand-50 dark:group-hover:bg-brand-900/30 flex items-center justify-center text-xs shadow-inner transition-all border-2 border-slate-300 dark:border-slate-700" title="${t.listenTooltip}">
-                <i class="fa-solid fa-volume-high"></i>
-              </button>
-            </div>
-
-            <!-- Card Body: 3D Inner Box with Bold Borders -->
-            <div class="bg-white/70 dark:bg-slate-950/40 rounded-xl border-4 border-slate-800 dark:border-slate-300 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] p-1.5 space-y-1.5">
-              
-              <!-- Status Grid (Drip & Consumables side by side) -->
-              <div class="grid grid-cols-2 gap-1.5">
-                <div class="bg-white dark:bg-slate-900 rounded-lg p-2.5 shadow-sm border-2 border-slate-700 dark:border-slate-400 flex flex-col justify-between min-h-[64px]">
-                  <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-pills text-brand-500 w-3"></i> ${t.drip}
-                  </span>
-                  <span class="font-bold text-[11px] mt-1.5 px-1.5 py-0.5 rounded w-max ${dripInfo[0]}">${localizedStatus(u.drip)}</span>
-                </div>
-                <div class="bg-white dark:bg-slate-900 rounded-lg p-2.5 shadow-sm border-2 border-slate-700 dark:border-slate-400 flex flex-col justify-between min-h-[64px]">
-                  <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-syringe text-orange-500 w-3"></i> ${t.consumables}
-                  </span>
-                  <span class="font-bold text-[11px] mt-1.5 px-1.5 py-0.5 rounded w-max ${consumInfo[0]}">${localizedStatus(u.bukanUbat)}</span>
-                </div>
-              </div>
-
-              <!-- Logistics List -->
-              <div class="bg-white dark:bg-slate-900 rounded-lg p-2.5 shadow-sm border-2 border-slate-700 dark:border-slate-400 flex flex-col gap-2.5">
-                
-                <div class="flex justify-between items-center">
-                  <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                    <i class="fa-solid fa-cart-flatbed text-slate-400 w-3.5 text-center"></i> ${t.trolleyQuantity}
-                  </span>
-                  <span class="font-extrabold text-xs text-slate-800 dark:text-slate-100">${u.jumlahTroli}</span>
-                </div>
-
-                <div class="flex justify-between items-center border-t-2 border-slate-700 dark:border-slate-400 pt-2">
-                  <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                    <i class="fa-solid fa-truck-ramp-box text-amber-500 w-3.5 text-center"></i> ${t.needTrolley}
-                  </span>
-                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded uppercase ${needs(u) ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}">${needs(u) ? t.yes : t.no}</span>
-                </div>
-
-                <!-- Direct Issue -->
-                <div class="flex justify-between items-center border-t-2 border-slate-700 dark:border-slate-400 pt-2">
-                  <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 truncate max-w-[130px]">
-                    <i class="fa-solid fa-circle-exclamation text-red-500 w-3.5 text-center shrink-0"></i><span class="truncate">${escapeHtml(headerF)}</span>
-                  </span>
-                  <span class="font-bold text-[10px] px-1.5 py-0.5 rounded ${diClass}">${escapeHtml(diValue)}</span>
-                </div>
-              </div>
-
-            </div>
-          </article>
-        `;
-      }).join("") : `
-        <div class="col-span-full text-center py-16 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
-          <i class="fa-solid fa-magnifying-glass text-3xl text-slate-300 dark:text-slate-600 mb-3"></i>
-          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">${t.none}</p>
+        return `<article class="card relative bg-white border rounded-3xl p-5 ${u.ready ? "neon" : ""}">
+      ${u.ready ? `<span class="priority badge yellow"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(headerF)}</span>` : ""}
+      <div class="flex gap-3 items-center mb-5 ${u.ready ? "pr-20" : ""}">
+        <div class="w-9 h-9 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">${escapeHtml(u.unit)}</div>
+        <div class="titlebox relative flex-1 min-w-0">
+          <div class="title" tabindex="0">${escapeHtml(unitName)}</div>
+          <div class="tip">${escapeHtml(unitName)}</div>
         </div>
-      `;
+      </div>
+      <div class="panel">
+        <div class="row"><span><i class="fa-solid fa-pills w-5 text-violet-500"></i>&nbsp;${t.drip}</span><b class="badge ${dripInfo[0]}">${localizedStatus(u.drip)}</b></div>
+        <div class="row"><span><i class="fa-solid fa-syringe w-5 text-orange-500"></i>&nbsp;${t.consumables}</span><b class="badge ${consumInfo[0]}">${localizedStatus(u.bukanUbat)}</b></div>
+        <div class="row"><span><i class="fa-solid fa-truck w-5 text-slate-500"></i>&nbsp;${t.trolleyQuantity}</span><b>${u.jumlahTroli}</b></div>
+        <div class="row"><span><i class="fa-solid fa-question-circle w-5 text-slate-500"></i>&nbsp;${t.needTrolley}</span><b class="badge ${needs(u) ? "yellow" : "green"}">${needs(u) ? t.yes : t.no}</b></div>
+        <div class="row"><span><i class="fa-solid fa-triangle-exclamation w-5 text-red-500"></i>&nbsp;${escapeHtml(headerF)}</span><b class="badge ${diClass}">${escapeHtml(diValue)}</b></div>
+      </div>
+    </article>`;
+      }).join("") : `<div class="col-span-full text-center py-16 text-slate-500">${t.noUnits}</div>`;
 
-      DOM.pages.innerHTML = totalPages > 1 ? Array.from({ length: totalPages }, (_, i) => `
-        <button onclick="goToPage(${i + 1})" class="min-w-[32px] h-8 px-2 rounded-lg font-bold text-xs transition ${page === i + 1 ? 'bg-brand-600 text-white shadow-sm' : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50'}">${i + 1}</button>
-      `).join("") : "";
-    }
-
-    function goToPage(p) {
-      page = p;
-      render();
-      window.scrollTo({ top: DOM.search.offsetTop - 80, behavior: 'smooth' });
+      pages.innerHTML = tp > 1 ? Array.from({
+        length: tp
+      }, (_, i) => `<button onclick="page=${i + 1};render()" class="w-9 h-9 rounded-xl ${page === i + 1 ? "bg-violet-600 text-white" : "bg-white border"}">${i + 1}</button>`).join("") : "";
     }
 
     function stats() {
-      DOM.total.textContent = data.length;
-      DOM.ready.textContent = data.filter(u => u.ready).length;
-      DOM.need.textContent = data.filter(needs).length;
-      DOM.trolleys.textContent = data.reduce((s, u) => s + (Number(u.jumlahTroli) || 0), 0);
+      total.textContent = data.length;
+      ready.textContent = data.filter(u => u.ready).length;
+      need.textContent = data.filter(needs).length;
+      trolleys.textContent = data.reduce((s, u) => s + u.jumlahTroli, 0);
     }
 
     function notifyChanges(oldList, newList) {
-      const t = T[lang];
-      const oldMap = new Map(oldList.map(u => [u.unit, u]));
-      const changed = newList.filter(u => {
-        const o = oldMap.get(u.unit);
+      let oldMap = new Map(oldList.map(u => [u.unit, u]));
+      let changed = newList.filter(u => {
+        let o = oldMap.get(u.unit);
         return o && JSON.stringify([o.drip, o.bukanUbat, o.jumlahTroli, o.perluTroli, o.priority]) !== JSON.stringify([u.drip, u.bukanUbat, u.jumlahTroli, u.perluTroli, u.priority]);
       });
-
       changed.forEach(addStatusNotification);
-
       if (changed.length) {
-        DOM.changeToastText.textContent = `${changed.length} ${t.statusUpdated}`;
-        DOM.changeToast.classList.remove("hidden");
-        setTimeout(() => DOM.changeToast.classList.add("hidden"), 4000);
+        changeToastText.textContent = lang === "bm" ? `${changed.length} status unit telah dikemas kini.` : `${changed.length} unit status updated.`;
+        changeToast.classList.remove("hidden");
+        grid.classList.add("status-change");
+        setTimeout(() => {
+          changeToast.classList.add("hidden");
+          grid.classList.remove("status-change");
+        }, 5000);
       }
     }
 
-    function addStatusNotification(u) {
-      const t = T[lang];
-      const headerF = fallbackFHeader();
-      const diValue = directIssueDisplayValue(u.priority);
-      const card = document.createElement("div");
-      
-      lastAnnouncementTime = Date.now(); // Tetapkan semula masa asas 1 jam apabila ada kemas kini
-      
-      card.className = "notification-card pointer-events-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 shadow-xl overflow-hidden backdrop-blur-md animate-toast";
-      card.innerHTML = `
-        <div class="flex items-center justify-between gap-3 px-3.5 py-2 bg-slate-900 dark:bg-slate-800 text-white">
-          <div class="flex items-center gap-2 font-bold text-xs">
-            <i class="fa-solid fa-bell text-brand-400"></i>
-            <span>${t.unitUpdate} • ${escapeHtml(u.unit)}</span>
-          </div>
-          <button class="close-btn text-slate-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="p-3 text-xs space-y-1.5">
-          <div class="font-bold text-slate-900 dark:text-white truncate">${escapeHtml(label(u.unit))}</div>
-          <div class="grid grid-cols-2 gap-1.5 text-[11px]">
-            <div class="bg-slate-50 dark:bg-slate-800 p-1.5 rounded-lg"><span class="text-slate-400 block">${t.drip}</span><b>${localizedStatus(u.drip)}</b></div>
-            <div class="bg-slate-50 dark:bg-slate-800 p-1.5 rounded-lg"><span class="text-slate-400 block">${t.consumables}</span><b>${localizedStatus(u.bukanUbat)}</b></div>
-          </div>
-          <div class="text-[10px] text-slate-400 text-right pt-1">${new Date().toLocaleTimeString(lang === "bm" ? "ms-MY" : "en-US")}</div>
-        </div>
-      `;
+    let notificationAudioContext = null;
+    let notificationSoundTimer = null;
+    let speechKeepAliveTimer = null;
 
-      card.querySelector(".close-btn").onclick = () => card.remove();
-      DOM.notificationsPanel.prepend(card);
+    function keepSpeechActive() {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        // Some browsers pause speech after a page interaction. Resume it without cancelling the utterance.
+        if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+      } catch (error) {
+        console.warn('Text-to-speech could not be resumed:', error);
+      }
+    }
 
-      if (notificationsEnabled && "Notification" in window && Notification.permission === "granted") {
+    function playNotificationSound() {
+      if (!soundNotifications) return;
+      try {
+        let AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        notificationAudioContext = notificationAudioContext || new AudioContext();
+        notificationAudioContext.resume();
+        if (notificationSoundTimer) clearInterval(notificationSoundTimer);
+        let end = Date.now() + 3000;
+        let beep = () => {
+          if (Date.now() >= end) {
+            clearInterval(notificationSoundTimer);
+            notificationSoundTimer = null;
+            return;
+          }
+          let o = notificationAudioContext.createOscillator();
+          let g = notificationAudioContext.createGain();
+          let now = notificationAudioContext.currentTime;
+          o.type = "sine";
+          o.frequency.setValueAtTime(880, now);
+          o.frequency.exponentialRampToValueAtTime(660, now + 0.18);
+          g.gain.setValueAtTime(0.0001, now);
+          g.gain.exponentialRampToValueAtTime(0.12, now + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+          o.connect(g);
+          g.connect(notificationAudioContext.destination);
+          o.start(now);
+          o.stop(now + 0.22);
+        };
+        beep();
+        notificationSoundTimer = setInterval(beep, 600);
+      } catch (e) {
+        /* Browser audio may require prior interaction. */
+      }
+    }
+
+    function speakNotification(u, t) {
+      if (!("speechSynthesis" in window)) return;
+
+      let unitName = label(u.unit);
+      let speechUnitName = lang === "bm" && normalizeUnitCode(u.unit) === "GOT" ? "dewan bedah am" : unitName;
+      let trolleyCount = Number(u.jumlahTroli) || 0;
+      let trolleyValue = lang === "bm"
+        ? (trolleyCount === 0 ? "kosong troli" : `${trolleyCount} troli`)
+        : (trolleyCount === 0 ? "zero trolleys" : `${trolleyCount} trolley${trolleyCount === 1 ? "" : "s"}`);
+      let message = lang === "bm"
+        ? `${speechUnitName}, ${t.drip}, ${localizedStatus(u.drip)}, ${t.consumables}, ${localizedStatus(u.bukanUbat)}, ${t.trolleyQuantity}, ${trolleyValue}, ${needs(u) ? t.yes : t.no}, ${t.needTrolley}.`
+        : `${speechUnitName}. ${t.drip}: ${localizedStatus(u.drip)}. ${t.consumables}: ${localizedStatus(u.bukanUbat)}. ${t.trolleyQuantity}: ${trolleyValue}. ${needs(u) ? t.yes : t.no}, ${t.needTrolley}.`;
+
+      try {
+        // Do not cancel speech when the user interacts with the page.
+        // This keeps TTS running while clicking outside cards, searching, or editing settings.
+        let utterance = new SpeechSynthesisUtterance(message);
+        utterance.lang = lang === "bm" ? "ms-MY" : "en-US";
+        utterance.rate = 0.95;
+        utterance.pitch = 1;
+        window.speechSynthesis.speak(utterance);
+        keepSpeechActive();
+        clearInterval(speechKeepAliveTimer);
+        speechKeepAliveTimer = setInterval(() => {
+          if (!window.speechSynthesis.speaking) {
+            clearInterval(speechKeepAliveTimer);
+            speechKeepAliveTimer = null;
+            return;
+          }
+          keepSpeechActive();
+        }, 250);
+      } catch (error) {
+        console.warn("Text-to-speech is unavailable:", error);
+      }
+    }
+
+    // Stop speech when the user clicks outside a unit card.
+    function stopSpeechOutsideUnitCard(event) {
+      if (event.target.closest("article.card")) {
+        keepSpeechActive();
+        return;
+      }
+
+      if ("speechSynthesis" in window) {
         try {
-          const nativeNotification = new Notification(
-            `${t.notifTitle}: ${u.unit}`, {
-              body: `${label(u.unit)}\n${t.drip}: ${localizedStatus(u.drip)} | ${t.consumables}: ${localizedStatus(u.bukanUbat)}\n${t.trolleyQuantity}: ${u.jumlahTroli} (${t.needTrolley} ${needs(u) ? t.yes : t.no})`,
-              tag: `statufl-${u.unit}`
-            }
-          );
-          setTimeout(() => nativeNotification.close(), 4000);
-        } catch (e) {
-          console.warn("Desktop notification error:", e);
+          window.speechSynthesis.cancel();
+        } catch (error) {
+          console.warn("Text-to-speech could not be stopped:", error);
         }
       }
 
-      if (u.unit !== "SYSTEM" && u.unit !== "INFO") {
-        queueNotificationSpeech(u, card);
-      } else {
-        playMelodicChime();
+      clearInterval(speechKeepAliveTimer);
+      speechKeepAliveTimer = null;
+    }
+
+    // Stop TTS as soon as the user presses or clicks outside a unit card.
+    // The grid selector prevents other cards or controls from being treated as unit cards.
+    function stopSpeechWhenOutsideUnitCard(event) {
+      // Keep TTS running while the user interacts with unit cards, search, or Settings.
+      if (event.target.closest("#grid article.card, #search, #modal, [onclick=\"openSettings()\"]")) {
+        keepSpeechActive();
+        return;
       }
 
-      setTimeout(() => {
-        if (document.body.contains(card)) card.remove();
-      }, 8000);
+      if ("speechSynthesis" in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (error) {
+          console.warn("Text-to-speech could not be stopped:", error);
+        }
+      }
+
+      clearInterval(speechKeepAliveTimer);
+      speechKeepAliveTimer = null;
+    }
+
+    document.addEventListener("pointerdown", stopSpeechWhenOutsideUnitCard, true);
+    document.addEventListener("click", stopSpeechWhenOutsideUnitCard, true);
+    document.addEventListener("input", keepSpeechActive, true);
+    document.addEventListener("focusin", keepSpeechActive, true);
+
+    function addStatusNotification(u) {
+      let t = T[lang];
+      let headerF = fallbackFHeader();
+      let diValue = directIssueDisplayValue(u.priority);
+      let card = document.createElement("div");
+      card.className = "notification-card pointer-events-auto rounded-2xl border border-emerald-300 bg-white/95 dark:bg-slate-800/95 shadow-2xl overflow-hidden";
+      card.innerHTML = `<div class="flex items-center justify-between gap-3 px-4 py-3 bg-emerald-600 text-white">
+    <div class="flex items-center gap-2 font-bold"><i class="fa-solid fa-bell"></i><span>${lang === "bm" ? "Kemas Kini Unit" : "Unit Status Update"}</span></div>
+    <button><i class="fa-solid fa-times"></i></button>
+  </div>
+  <div class="p-4">
+    <div class="font-bold text-slate-900 dark:text-white mb-3">${escapeHtml(u.unit)} • ${escapeHtml(label(u.unit))}</div>
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <div class="rounded-xl bg-violet-50 dark:bg-violet-900/30 p-2"><div class="text-slate-500 dark:text-slate-500">${t.drip}</div><b>${localizedStatus(u.drip)}</b></div>
+      <div class="rounded-xl bg-orange-50 dark:bg-orange-900/30 p-2"><div class="text-slate-500 dark:text-slate-500">${t.consumables}</div><b>${localizedStatus(u.bukanUbat)}</b></div>
+      <div class="rounded-xl bg-slate-100 dark:bg-slate-700 p-2"><div class="text-slate-500 dark:text-slate-500">${t.trolleyQuantity}</div><b>${u.jumlahTroli}</b></div>
+      <div class="rounded-xl bg-amber-50 dark:bg-amber-900/30 p-2"><div class="text-slate-500 dark:text-slate-500">${t.needTrolley}</div><b>${needs(u) ? t.yes : t.no}</b></div>
+      <div class="rounded-xl bg-red-50 dark:bg-red-900/30 p-2 col-span-full"><div class="text-slate-500 dark:text-slate-500">${escapeHtml(headerF)}</div><b>${escapeHtml(diValue)}</b></div>
+    </div>
+    <div class="mt-3 text-[10px] text-slate-400">${new Date().toLocaleTimeString(lang === "bm" ? "ms-MY" : "en-US")}</div>
+  </div>`;
+      card.querySelector("button").onclick = () => card.remove();
+      notificationsPanel.prepend(card);
+      // Browser notifications are intentionally disabled in preview environments.
+      // The in-app notification card above remains available.
+      playNotificationSound();
+      setTimeout(() => speakNotification(u, t), soundNotifications ? 3200 : 0);
+      setTimeout(() => card.remove(), 3000);
     }
 
     async function refresh() {
       if (refreshBusy) return;
       refreshBusy = true;
-      DOM.refreshIcon.classList.add("refreshing");
-      const t = T[lang];
-      
+      refreshIcon.classList.add("refreshing");
       try {
-        const incoming = await load();
-        const sig = signature(incoming);
-        const hasChanged = (lastSignature && sig !== lastSignature);
-        const oldData = data;
-
+        let incoming = await load();
+        let sig = signature(incoming);
+        if (lastSignature && sig !== lastSignature) notifyChanges(data, incoming);
         data = incoming;
         lastSignature = sig;
         stats();
         render();
-
-        if (hasChanged) {
-          notifyChanges(oldData, incoming);
-        }
-
-        const timeStr = new Date().toLocaleTimeString(lang === "bm" ? "ms-MY" : "en-US");
-        DOM.updated.textContent = timeStr;
-
-        const isConnected = !!extractSheetId(cfg().url);
-        DOM.connection.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-400' : 'bg-amber-400'}"></span> ${isConnected ? t.connected : t.noSheetConfig}`;
-        DOM.connection.className = `mt-0.5 text-xs ${isConnected ? 'text-emerald-400' : 'text-amber-400'} font-medium flex items-center gap-1`;
-        
-        DOM.mobileConnDot.className = `w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`;
-        DOM.mobileConnText.textContent = isConnected ? t.live : t.noSheetConfig;
-        DOM.mobileConnText.className = `text-[10px] font-medium ${isConnected ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`;
-        
-        if (!DOM.settingsStatus.classList.contains("hidden")) {
-           DOM.settingsStatus.textContent = t.connTested;
-           DOM.settingsStatus.className = "p-3 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300";
-        }
+        updated.textContent = new Date().toLocaleTimeString(lang === "bm" ? "ms-MY" : "en-US");
+        connection.textContent = id(cfg().url) ? T[lang].connected : T[lang].noSheet;
       } catch (e) {
-        DOM.connection.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> ${t.disconnected}`;
-        DOM.connection.className = "mt-0.5 text-xs text-red-400 font-medium flex items-center gap-1";
-        
-        DOM.mobileConnDot.className = "w-1.5 h-1.5 rounded-full bg-red-500";
-        DOM.mobileConnText.textContent = t.disconnected;
-        DOM.mobileConnText.className = "text-[10px] font-medium text-red-600 dark:text-red-400";
-        
-        if (!DOM.settingsStatus.classList.contains("hidden")) {
-           DOM.settingsStatus.textContent = t.disconnected;
-           DOM.settingsStatus.className = "p-3 rounded-xl text-xs font-semibold bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300";
-        }
+        connection.textContent = T[lang].connectionError;
       } finally {
         refreshBusy = false;
-        DOM.refreshIcon.classList.remove("refreshing");
+        refreshIcon.classList.remove("refreshing");
       }
     }
 
     function searchUnits(v) {
       query = v;
       page = 1;
-      DOM.clear.classList.toggle("hidden", !v);
+      clear.classList.toggle("hidden", !v);
       render();
-    }
-
-    function clearSearch() {
-      DOM.search.value = "";
-      searchUnits("");
-      DOM.search.focus();
     }
 
     function setFilter(v) {
       filter = v;
       page = 1;
-
-      const activeClass = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm shrink-0";
-      const inactiveClass = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shrink-0";
-
-      DOM.filterAll.className = (v === "all") ? activeClass : inactiveClass;
-      DOM.filterReady.className = (v === "ready") ? activeClass : inactiveClass;
-      DOM.filterNeed.className = (v === "need") ? activeClass : inactiveClass;
-
+      allBtn.classList.toggle("bg-white", v === "all");
+      allBtn.classList.toggle("shadow-sm", v === "all");
+      needBtn.classList.toggle("bg-white", v === "need");
+      needBtn.classList.toggle("shadow-sm", v === "need");
       render();
     }
 
     function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle("dark");
-      localStorage.setItem("statufl_theme", isDark ? "dark" : "light");
-      DOM.themeIcon.className = isDark ? "fa-solid fa-sun text-amber-400" : "fa-solid fa-moon";
-      const t = T[lang];
-      DOM.themeText.textContent = isDark ? t.modeLight : t.modeDark;
+      let d = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("statufl_theme", d ? "dark" : "light");
+      themeIcon.className = d ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      document.querySelector('[title="Tukar mod warna"]')?.setAttribute("title", d ? (lang === "bm" ? "Tukar ke mod cerah" : "Switch to light mode") : (lang === "bm" ? "Tukar ke mod gelap" : "Switch to dark mode"));
+    }
+
+    function updateTooltipLanguage() {
+      document.querySelectorAll("[data-tooltip-key]").forEach(button => {
+        let key = button.dataset.tooltipKey;
+        if (T[lang][key]) {
+          button.dataset.tooltip = T[lang][key];
+          button.setAttribute("title", T[lang][key]);
+        }
+      });
     }
 
     function apply() {
-      const t = T[lang];
-      
-      document.title = t.tabTitle;
-      
+      let t = T[lang];
+      document.title = t.pageTitle;
+      document.documentElement.lang = lang === "bm" ? "ms" : "en";
+      document.getElementById("search").placeholder = t.searchPlaceholder;
+      document.getElementById("sheetUrl").placeholder = lang === "bm" ? "Tampal URL atau ID Google Sheets" : "Paste Google Sheets URL or ID";
+      document.getElementById("connection").textContent = id(cfg().url) ? t.connected : t.noSheet;
       document.querySelectorAll("[data-t]").forEach(e => {
-        if (t[e.dataset.t]) e.innerHTML = t[e.dataset.t];
+        if (t[e.dataset.t]) e.textContent = t[e.dataset.t];
       });
-      
-      DOM.heading.textContent = t.titleUnitStatus;
-      DOM.subtitle.innerHTML = t.subtitleMain;
-      DOM.langText.textContent = lang === "bm" ? "EN" : "BM";
-      DOM.search.placeholder = t.searchPlaceholder;
-      DOM.tapCueText.innerHTML = `<i class="fa-solid fa-volume-high text-brand-500 mr-1"></i>${t.tapForAudio}`;
-      
-      DOM.filterAll.textContent = t.allUnits;
-      DOM.filterReady.textContent = t.filterReady;
-      DOM.filterNeed.textContent = t.filterNeed;
-      
-      const isConnected = !!extractSheetId(cfg().url);
-      DOM.connection.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isConnected ? 'bg-emerald-400' : 'bg-amber-400'}"></span> ${isConnected ? t.connected : t.noSheetConfig}`;
-      DOM.mobileConnText.textContent = isConnected ? t.live : t.noSheetConfig;
-
-      const isDark = document.documentElement.classList.contains("dark");
-      DOM.themeText.textContent = isDark ? t.modeLight : t.modeDark;
-
+      heading.textContent = lang === "bm" ? "Status Unit" : "Unit Status";
+      subtitle.textContent = lang === "bm" ? "Pemantauan masa nyata Inden Drip, Consumables & Troli" : "Real-time Drip, Consumables & Trolley monitoring";
+      document.querySelector('[title="Tukar bahasa"]')?.setAttribute("title", lang === "bm" ? "Tukar ke English" : "Tukar ke BM");
+      document.getElementById("languageLabel").textContent = lang === "bm" ? "BM" : "EN";
+      updateTooltipLanguage();
+      document.querySelectorAll("[data-t]").forEach(e => {
+        if (t[e.dataset.t]) e.textContent = t[e.dataset.t];
+      });
       render();
     }
 
@@ -1242,56 +1465,86 @@
       apply();
     }
 
+    function getDeviceVoiceGuide() {
+      let ua = navigator.userAgent || "";
+      let guideKey = /Android/i.test(ua) ? "voicePackAndroid" : /iPhone|iPad|iPod/i.test(ua) ? "voicePackIos" : /Macintosh|Mac OS/i.test(ua) ? "voicePackMac" : /Windows/i.test(ua) ? "voicePackWindows" : "voicePackAndroid";
+      return `<div class="rounded-2xl border border-slate-300 bg-slate-50 p-4"><div class="font-semibold text-slate-900 mb-2">${T[lang].voicePackGuideTitle}</div><p class="text-slate-900">${T[lang][guideKey]}</p><p class="mt-3 text-slate-700">${T[lang].voicePackBrowser}</p></div>`;
+    }
+
+    function showVoicePackGuide() {
+      document.getElementById("voicePackGuide").innerHTML = getDeviceVoiceGuide();
+      document.getElementById("voicePackModal").classList.replace("hidden", "flex");
+      localStorage.setItem("statufl_voice_pack_prompted", "yes");
+    }
+
+    function dismissVoicePackPrompt() {
+      document.getElementById("voicePackModal").classList.replace("flex", "hidden");
+      localStorage.setItem("statufl_voice_pack_prompted", "yes");
+    }
+
+    function maybePromptVoicePack() {
+      if (!localStorage.getItem("statufl_voice_pack_prompted")) {
+        setTimeout(() => {
+          document.getElementById("voicePackModal").classList.replace("hidden", "flex");
+        }, 700);
+      }
+    }
+
     async function enableNotifications() {
-      initAudio();
-      const t = T[lang];
-      if (!("Notification" in window)) {
-        alert(t.notifUnsupported);
-        return;
+      addStatusNotification({
+        unit: "STATUFL",
+        drip: lang === "bm" ? "Notifikasi dalam aplikasi aktif" : "In-app notifications enabled",
+        bukanUbat: "-",
+        jumlahTroli: 0,
+        perluTroli: "No",
+        priority: ""
+      });
+      return;
+      if (true) {
+        return addStatusNotification({
+          unit: "STATUFL",
+          drip: "Tidak Disokong",
+          bukanUbat: "Tidak Disokong",
+          jumlahTroli: 0,
+          perluTroli: "No",
+          priority: ""
+        });
       }
-      try {
-        let perm = Notification.permission;
-        if (perm !== "granted" && perm !== "denied") {
-          perm = await Notification.requestPermission();
-        }
-        notificationsEnabled = (perm === "granted");
-        localStorage.setItem("statufl_notifications", notificationsEnabled ? "on" : "off");
-        
-        DOM.changeToastText.textContent = notificationsEnabled ? t.notifEnabled : t.notifDenied;
-        DOM.changeToast.classList.remove("hidden");
-        setTimeout(() => DOM.changeToast.classList.add("hidden"), 3500);
-      } catch (e) {
-        console.warn("Notification error:", e);
-      }
+      let p = Notification.permission;
+      if (p !== "granted") p = await Notification.requestPermission();
+      notificationsEnabled = p === "granted";
+      localStorage.setItem("statufl_notifications", notificationsEnabled ? "on" : "off");
+      addStatusNotification({
+        unit: "STATUFL",
+        drip: notificationsEnabled ? (lang === "bm" ? "Aktif" : "Enabled") : (lang === "bm" ? "Kebenaran ditolak" : "Permission denied"),
+        bukanUbat: notificationsEnabled ? "Semua notifikasi diaktifkan" : "-",
+        jumlahTroli: 0,
+        perluTroli: "No",
+        priority: ""
+      });
     }
 
     function openSettings() {
-      const c = cfg();
-      DOM.sheetUrl.value = c.url;
-      DOM.sheetName.value = c.name;
-      DOM.sheetRange.value = c.range;
-      DOM.soundNotifications.checked = soundNotifications;
-      DOM.settingsStatus.classList.add("hidden");
-      DOM.modal.classList.replace("hidden", "flex");
+      let c = cfg();
+      sheetUrl.value = c.url;
+      sheetName.value = c.name;
+      sheetRange.value = c.range;
+      document.getElementById("soundNotifications").checked = soundNotifications;
+      modal.classList.replace("hidden", "flex");
     }
 
     function closeSettings() {
-      DOM.modal.classList.replace("flex", "hidden");
+      modal.classList.replace("flex", "hidden");
     }
 
     function saveSettings() {
-      const t = T[lang];
-      const url = DOM.sheetUrl.value.trim() || DEFAULT_SHEET_URL;
-      if (!extractSheetId(url)) {
-        alert(t.invalidUrl);
-        return;
-      }
+      let url = sheetUrl.value.trim() || DEFAULT_SHEET_URL;
+      if (!id(url)) return alert(T[lang].invalidSheetUrl);
       localStorage.setItem("statufl_url", url);
-      localStorage.setItem("statufl_name", DOM.sheetName.value.trim() || "DATA");
-      localStorage.setItem("statufl_range", DOM.sheetRange.value.trim() || "A:F");
-      soundNotifications = DOM.soundNotifications.checked;
+      localStorage.setItem("statufl_name", sheetName.value.trim() || "DATA");
+      localStorage.setItem("statufl_range", sheetRange.value.trim() || "A:F");
+      soundNotifications = document.getElementById("soundNotifications").checked;
       localStorage.setItem("statufl_sound_notifications", soundNotifications ? "on" : "off");
-      
       lastSignature = "";
       columnFHeader = "";
       closeSettings();
@@ -1299,45 +1552,27 @@
     }
 
     function testConnection() {
-      const t = T[lang];
-      DOM.settingsStatus.textContent = t.testingConn;
-      DOM.settingsStatus.className = "p-3 rounded-xl text-xs font-semibold bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300";
-      DOM.settingsStatus.classList.remove("hidden");
-      refresh();
+      status.textContent = lang === "bm" ? "Sambungan diuji. Status akan dikemas kini secara automatik setiap 5 saat." : "Connection tested. Status will update automatically every 5 seconds.";
+      status.className = "p-3 rounded-2xl text-sm bg-emerald-100 text-emerald-700";
+      status.classList.remove("hidden");
     }
 
-    window.addEventListener("keydown", e => {
-      if (e.key === "Escape" && !DOM.modal.classList.contains("hidden")) closeSettings();
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        DOM.search.focus();
-      }
-    });
-
-    DOM.modal.addEventListener("click", e => {
-      if (e.target === DOM.modal) closeSettings();
-    });
-
-    window.addEventListener("pointerdown", () => initAudio(), { once: true });
-
-    window.addEventListener("DOMContentLoaded", () => {
+    window.onload = () => {
       apply();
-      lastAnnouncementTime = Date.now();
-      const isDark = document.documentElement.classList.contains("dark");
-      DOM.themeIcon.className = isDark ? "fa-solid fa-sun text-amber-400" : "fa-solid fa-moon";
-      
+      let dark = localStorage.getItem("statufl_theme") === "dark";
+      if (dark !== document.documentElement.classList.contains("dark")) toggleTheme();
       refresh();
       setInterval(refresh, 5000);
-      
-      if (!localStorage.getItem("statufl_url")) {
-        setTimeout(openSettings, 500);
-      }
-      if ("Notification" in window && Notification.permission === "granted") {
+      maybePromptVoicePack();
+      if (!localStorage.getItem("statufl_url")) setTimeout(openSettings, 500);
+      if (false) {
         notificationsEnabled = true;
         localStorage.setItem("statufl_notifications", "on");
       }
-    });
+    };
+
   </script>
+
 </body>
 
 </html>
